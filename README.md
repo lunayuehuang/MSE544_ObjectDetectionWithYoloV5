@@ -475,6 +475,10 @@ And go into that folder, and you can explore all the training and dectection res
 
 <img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
 
+For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is shown as:
+
+<img src="./images/cm-2010-00417z_0001.jpeg" style="height: 90%; width: 90%;"/>
+
 ### Step E. Inference using with YoloV5 weights on your local machine
 
 Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights you got from cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```
