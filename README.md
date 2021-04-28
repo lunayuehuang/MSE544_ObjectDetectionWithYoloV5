@@ -2,14 +2,14 @@
 
 ## Part 1 How to train and run YoloV5 on local machines
 
-### Step A. Get YoloV5 an set up python environment
+### Step A. Get YoloV5 and set up python environment
 
-Open your terminal and make a new directory named ```MSE544_yolo_training```(or names that you like). Switch into the directory and then clone the yolo repository from GitHub:
+Open your terminal and make a new directory named ```MSE544_yolo_training```(or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
 ```
 git clone https://github.com/ultralytics/yolov5
 ```
 
-Make a new conda enviroment with python 3.8 or later and install the required packages
+Create a new conda enviroment with python 3.8 or later and install the required packages for Yolo
 ```
 # create conda environment
 conda create -n yolov5 python=3.8 jupyter notebook
@@ -24,21 +24,21 @@ pip install sklearn scikit-image azureml-core # other packages used in this tuto
 
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
-Go out of the ```yolov5``` folder (back to ```MSE544_yolo_training```) and copy a file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to current one.
+Go out of the ```yolov5``` folder (back to ```MSE544_yolo_training```) and copy the file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to current folder.
 ```
 cd <path-to-MSE544_yolo_training>
 cp <path-to-Mse544-CustomVision>/util.py .
 ```
 
-Now, start a fresh jupyter notebook, named by ```molecule_detection_yolo_training.ipynb```. In the first cell import the utility functions:
-```
+Now, create a new jupyter notebook named  ```molecule_detection_yolo_training.ipynb```. In the first cell, import the utility functions:
+```python
 from util import labeledImage, normalize_coordinates, convert_to_yolo_format
 from sklearn.model_selection import train_test_split
 import os, shutil, yaml
 ```
 
 Then use the helper class we have from Monday ```labeledImage``` to load all the labels that produced by ImageJ:
-```
+```python
 source_images_dir = '<path-to-Mse544-CustomVision>/molecules/'
 source_labels_dir = '<path-to-Mse544-CustomVision>/molecules/labels/'
 
@@ -54,20 +54,20 @@ for file in os.listdir(source_images_dir):
         labeled_images[-1].add_labels_from_file(tag, label_path)
 ```
 
-In next cell. let's split the labled images as training, validation and testing. Normally the ratio of them is 7:2:1.
-```
+In the next cell, let's split the labeled images into training, validation and testing sets. A typical split ratio to use is 7:2:1, and we can use Keras' '''train_test_split()''' function for this.
+```python
 train_and_val_set, test_set = train_test_split(labeled_images, test_size=0.1)
 train_set, val_set = train_test_split(train_and_val_set, test_size=(2/9))
 
 len(train_set), len(val_set), len(test_set)
 ```
 
-The output of this cell will show the size of training, valiation and testing set. Particularly, for this example, it's
-```
+The output of this cell will show the size of training, validation and testing sets. For this example, the output is:
+```python
 (35, 10, 5)
 ```
 
-Before pouring the images and labels, let's create our data directory hierarchy as
+Next, let's organize our data directory hierarchy as:
 ```
 |---image_data
     |---training.yaml
@@ -81,18 +81,18 @@ Before pouring the images and labels, let's create our data directory hierarchy 
         |---images
         |---lables
 ```
-where ```training.yaml``` is a configuration file for yolo that stores all the parameters information needed by yolov5. Run the following code in your notebook will produce such data structure, and ```molecule_images``` is used for the name of this image dataset.
+where ```training.yaml``` is a configuration file for yolo that stores all the parameters information needed by yolov5. Running the following code in your notebook will produce such data structure in a base directory named ```molecule_images```.
 
-```
-# making directories
+```python
+# Create the molecule_images directory if it doesn't exist
 output_dir = './molecule_images'
-
 if not os.path.exists(output_dir): os.mkdir(output_dir)
 
 train_dir = os.path.join(output_dir, 'train') 
 val_dir   = os.path.join(output_dir, 'val') 
 test_dir  = os.path.join(output_dir, 'test') 
 
+# Create the sub-directories
 for d in [train_dir, val_dir, test_dir]:
     if not os.path.exists(d): os.mkdir(d)
     
@@ -102,8 +102,8 @@ for d in [train_dir, val_dir, test_dir]:
     for sub_dir in [images_sub_dir, labels_sub_dir]:
         if not os.path.exists(sub_dir): os.mkdir(sub_dir)
 ```
-Now, it's ready to copy over all the images file and convert all the ImageJ labels into yolo format:
-```
+Now we're ready to copy over all the images to the right sub-folders, and convert all ImageJ labels files into yolo format:
+```python
 # make unified yolo tags 
 tags = [tag]
 
@@ -121,8 +121,8 @@ for d, s in dataset:
     # covert ImageJ labels to yolo format and save it to labels_sub_dir
     convert_to_yolo_format(s, labels_sub_dir, tags)
 ```
-The last step is to generate a configuration file for training:
-```
+The last step is to generate a yaml configuration file for training. Yolo will read this configuration file to figure out where to find the training and validation datasets, and what the tags (objects to be detected) are:
+```python
 # generate yolo yaml file
 yolo_yaml = os.path.join(output_dir, 'molecule_detection_yolov5.yaml')
 
@@ -137,18 +137,19 @@ with open(yolo_yaml, 'w') as yamlout:
         sort_keys=False
     )
 ```
-### Step C. Training the YoloV5 modle on local machines    
-With all the label prepared, you can try to train a few epoch on your local machine by simpily go into ```yolov5``` folder from your notebook:
-```
+### Step C. Training the YoloV5 model on local machines    
+With all the labels prepared, you can try to train a few epochs on your local machine by simply going into your ```yolov5``` folder from your notebook:
+```python
 %cd yolov5
 ```
 and then run the training command in next cell:
-```
+```python
 !python train.py --img 640 --batch 16 --epochs 1 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt
 ```
-As you might noticed that, training yolov5 model on your local machine is very slow, where the GPU training cluster on Azure Machine Learing could be used to speed up our training. 
-
 The logs of your training is will be located at ```yolov5/runs/train/exp*```.
+
+As you might notice, training yolov5 model on your local machine can be very slow; because of this, we will try to use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
+
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning
 
