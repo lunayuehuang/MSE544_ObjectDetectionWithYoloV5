@@ -493,11 +493,11 @@ The results of your inference is will be located at ```yolov5/runs/test/exp<id>`
 
 ## Reference and Further Reading
 
-https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data
+[https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data](https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data)
 
-https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results
+[https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results](https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results)
 
-https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2
+[https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2](https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2)
 
 
 
