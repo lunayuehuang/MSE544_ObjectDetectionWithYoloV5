@@ -313,11 +313,14 @@ Open the file and create the script by the following steps:
 
 - Connect to the datastore and download dataset
     - import necessary packages
+    
     ```
     from azureml.core import Workspace, Dataset, Run
     import os, tempfile, tarfile
     ```
+    
     - Make a temporary directory and mount molecule image dataset
+    
     ```
     mounted_path = tempfile.mkdtemp()
     print('Tmporary directory made at' + mounted_path)
@@ -332,7 +335,9 @@ Open the file and create the script by the following steps:
     
     print("molecule_images dataset mounting done")
     ```
+    
     - Untar files to the working directory
+    
     ```
     # untar all files under this directory, 
     for file in os.listdir(mounted_path):
@@ -341,7 +346,9 @@ Open the file and create the script by the following steps:
             tar.extractall()
             tar.close()
     ```
+
 - Set up yolov5 environment, very similar as part 1
+    
     ```
     # this is needed for container
     os.system('apt-get install -y python3-opencv')
@@ -358,18 +365,25 @@ Open the file and create the script by the following steps:
     import torch
     print(f"yolov5 enviroment setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name if torch.cuda.is_available() else 'CPU'})")
     ```
+
 -   Add training command and start training
+    
     ```
     os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
     ```
+
 -   Inference test images using the best training weights
+    
     ```
     os.system('python detect.py --weights ./runs/train/exp/weights/best.pt --iou 0.05 --save-txt --source ../molecule_images/test/images/')
     ```
+
 -   Copy the training and test results to ``./outputs`` of your work directory. Only in this way, the results can be saved and downloaded after job completion.
+    
     ```
     # os.system('cp -r ./runs ../outputs/')
     ```
+
 ### Step C. Submit the job and do the yolov5 training on cloud
 Now swith back to the notebook again, and set up experiment:
 ```
