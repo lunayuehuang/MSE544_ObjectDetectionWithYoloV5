@@ -10,7 +10,7 @@ git clone https://github.com/ultralytics/yolov5
 ```
 
 Create a new conda enviroment with python 3.8 or later and install the required packages for Yolo
-```
+``` 
 # create conda environment
 conda create -n yolov5 python=3.8 jupyter notebook
 conda activate yolov5
@@ -25,7 +25,7 @@ pip install sklearn scikit-image azureml-core # other packages used in this tuto
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
 Go out of the ```yolov5``` folder (back to ```MSE544_yolo_training```) and copy the file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to current folder.
-```
+``` 
 cd <path-to-MSE544_yolo_training>
 cp <path-to-Mse544-CustomVision>/util.py .
 ```
@@ -396,7 +396,7 @@ Check the running directory of your notebook by
 ```
 %pwd
 ```
-and if not in folder ```MSE544_yolo_training```, switch to it by
+and if you are not in folder ```MSE544_yolo_training```, switch to it by
 ```
 # make sure you are in the same folder of this notebook
 %cd <path-to-MSE544_yolo_training>
@@ -435,7 +435,7 @@ And go into that folder, and you can explore all the training and dectection res
 
 ### Step E. Inference using with YoloV5 weights on your local machine
 
-Open your terminal, navigate you to folder ```MSE544_yolo_training```. Copy the best weights you got from cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```
+Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights you got from cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```
 ```
 cp ./ExperimentRun/<exp-id>/outputs/runs/train/weights/best.pt ./yolov5/weights/molecule_dectection.pt
 ```
