@@ -361,11 +361,11 @@ Open the file and create the script by the following steps:
     ```
     os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
     ```
--   Inference using the best training weights
+-   Inference test images using the best training weights
     ```
-    python test.py --weights ./runs/weights/best.pt --data ../molecule_images/test/images --iou 0.60
+    os.system('python detect.py --weights ./runs/train/exp/weights/best.pt --iou 0.05 --save-txt --source ../molecule_images/test/images/')
     ```
--   Copy the training and test results to ``./outputs`` of your work directory. Only in that folder the results will be saved after job completion.
+-   Copy the training and test results to ``./outputs`` of your work directory. Only in this way, the results can be saved and downloaded after job completion.
     ```
     # os.system('cp -r ./runs ../outputs/')
     ```
@@ -397,6 +397,7 @@ Check the running directory of your notebook by
 ```
 and if not in folder ```MSE544_yolo_training```, switch to it by
 ```
+# make sure you are in the same folder of this notebook
 %cd <path-to-MSE544_yolo_training>
 ```
 
@@ -408,24 +409,52 @@ print(aml_url)
 ```
 
 If the training job is successfully deployed, a url will be printed as output. Click the url will navigate you to the experiment you submitted on the Azure Machine Learning studio.
- <img src="./images/experiment_url.png" style="height: 90%; width: 90%;"/>
+<img src="./images/experiment_url.png" style="height: 90%; width: 90%;"/>
 
+You can check your previous experiments runs on your Azure Machine Learning home page. On the left panel click ```Experiments``` > ```<your-experiment-names>``` > ```Run <id>```.
+<img src="./images/check_experiment_step1.png" style="height: 90%; width: 90%;"/>
+<img src="./images/check_experiment_step2.png" style="height: 90%; width: 90%;"/>
 
-### Step D. Check the running logs and download the weights
+### Step D. Check the running logs and download outputs
 
-### Step E. Inference using YoloV5
+On the experiement page, click ```Outputs + logs```
+<img src="./images/check_log_and_download_ouput_step1.png" style="height: 90%; width: 90%;"/>
 
-For this step, you can either download a pre-trained weights from this git repository(FIXME:comming soon), or wait until the end when you obtain a weights form cloud training.
+Then from left panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```70_driver_log.txt```, which essentially contains the system output during job runing. Scroll the this log near the end, and make sure that you saw ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicating and the training and inference are complete, respectively.Double check on the left panel again, unfold the ```outputs``` > ```runs```, make sure that both ```detect``` and ```train``` are copied there.  
+<img src="./images/check_log_and_download_ouput_step2.png" style="height: 90%; width: 90%;"/>
 
-To run test, simply use the following command under yolov5 directory:
+Now, you are ready to download the results (including training weights and inference labels) to your local machine by click ```Download all``` from the top panel. 
+<img src="./images/check_log_and_download_ouput_step3.png" style="height: 90%; width: 90%;"/>
+
+Choose the same folder ```MSE544_yolo_training``` for downloading and unzip the file, you will obtain a folder called ```ExperimentRun```:
+<img src="./images/check_results_step1.png" style="height: 90%; width: 90%;"/>
+
+And go into that folder, and you can explore all the training and dectection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
+<img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
+
+### Step E. Inference using with YoloV5 weights on your local machine
+
+Open your terminal, navigate you to folder ```MSE544_yolo_training```. Copy the best weights you got from cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```
 ```
-python test.py --weights test_weights.pt --data ../molecule_images/test/images --iou 0.80
+cp ./ExperimentRun/<exp-id>/outputs/runs/train/weights/best.pt ./yolov5/weights/molecule_dectection.pt
 ```
 
-The results of your inference is will be located at ```yolov5/runs/test/exp*```
+To run the inference, simply switch to yolov5 folder and use the same command you used in your script:
+```
+python detect.py --weights molecule_dectection.pt --iou 0.05 --save-txt --source ../molecule_images/test/images 
+```
 
-## Reference
+Note that you can switch to different models by changing the weight file after ```--weights``` and differenct testsets by changing the image source folder after ```--source```.
 
+The results of your inference is will be located at ```yolov5/runs/test/exp<id>```, and checking results will be the same as the instructions of step D.
+
+## Reference and Further Reading
+
+https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data
+
+https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results
+
+https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2
 
 
 
