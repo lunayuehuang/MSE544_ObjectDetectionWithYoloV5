@@ -163,11 +163,85 @@ The results of your inference is will be located at ```yolov5/runs/test/exp*```
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning
 
-### Step A. Create a DataStore 
+In order to train yolov5 on Azure GPU training clusters, you need to also create datasets that can be accessed by the clusters during training. The first two steps are intended to create data storage and upload the molecule dataset to cloud.
+
+First of all, go to Azure Machine Learning portal and sign in with UW account.Then choose the resource group for this class (named as ```rg-amlclass-<your-uw-id>```), and you will find a Azure Machine Learning Studio resource named as ```amlclass<your-uwid>```: 
+<img src="./images/navigate_to_amls_step1.png" style="height: 90%; width: 90%;"/>
+
+Click that resources, and in the following page click ```Launch studio```, you will be navigated to Azure Machine Learning Studio Home page. Also note that you can find the your storage account under this page, which you will be used for creating datastores.
+<img src="./images/navigate_to_amls_step2.png" style="height: 90%; width: 90%;"/>
+
+### Step A. Create a DataStore
+Go to your Azure Machine Learning Studio Home page and selete ```Create new```, in the scrolled list, select ```Datastore```
+<img src="./images/create_datastore_step1.png" style="height: 90%; width: 90%;"/>
+
+In the prompted file, fill in all the fields other than ```SAS token``` as this:
+<img src="./images/create_datastore_step2.png" style="height: 90%; width: 90%;"/>
+
+For ```SAS token```, go back to your resource group page, select and click the corresponding storage account used by Machine Learning studio:
+<img src="./images/create_datastore_step3.png" style="height: 90%; width: 90%;"/>
+
+In the left side bar of the following page, search ```sas```, and then choose ```Shared access signature```
+<img src="./images/create_datastore_step4.png" style="height: 30%; width: 30%;"/>
+
+Once the right side is prompted, select all of the ```Allowed resource types```, double check the ```start and epiry data/time``` to make sure it cover the range of this tutorial. Then click ```Generate SAS and connection string``` 
+<img src="./images/create_datastore_step5.png" style="height: 90%; width: 90%;"/>
+
+The SAS token should be sucessfully generated at the end of this page:
+<img src="./images/create_datastore_step6.png" style="height: 90%; width: 90%;"/>
+
+Copy the ```SAS token``` and paste it back to previous datastore creation, and click ```Create```. Then you will successfully created a datastore:
+<img src="./images/create_datastore_step7.png" style="height: 90%; width: 90%;"/>
 
 ### Step B. Create a DataSets of molecule images
 
+Open your terminal and navigate to the folder you created (```MSE544_yolo_training```) in part 1. Tar the whole dataset in order to keep the data structure during upload.
+```
+tar -cvf molecule_images.tar ./molecule_images
+```
+
+Navigate back to your Home page of your Azure Machine Learning studio, choose ```Datasets``` from left side bar and then click ```+ Create dataset``` at the right window. Choose ```From local files``` in the scoll-up list.
+<img src="./images/create_dataset_step1.png" style="height: 90%; width: 90%;"/>
+
+Fill in the basic information in the prompted window and go ```Next```
+<img src="./images/create_dataset_step2.png" style="height: 90%; width: 90%;"/>
+
+In the following page, choose the one datastore you created in last step within ```previous created datastore``` and then click ```Select datastore```
+<img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
+
+Then click ```Browse```, in the scrolled list, choose ```Upload files```:
+<img src="./images/create_dataset_step4.png" style="height: 50%; width: 50%;"/>
+
+and select the tar file you made earlier ```molecule_image.tar```:
+<img src="./images/create_dataset_step5.png" style="height: 50%; width: 50%;"/>
+
+Click ```Next``` to initialize the uploading:
+<img src="./images/create_dataset_step6.png" style="height: 90%; width: 90%;"/>
+
+Once the uploading is finished, click ```Create``` in the summary page:
+<img src="./images/create_dataset_step7.png" style="height: 90%; width: 90%;"/>
+
+And a dataset is successfully created.
+<img src="./images/create_dataset_step8.png" style="height: 90%; width: 90%;"/>
+
 ### Step C. Create a GPU Training Cluster
+Navigate back to your home page of your Azure Machine Learning studio, and this time use ```Create new``` to create a ```Training cluster```
+And a dataset is successfully created.
+<img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
+
+In the prompted window, choose options as this screenshot, and then click ```Next``` 
+<img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
+
+In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` as ```120``` seconds. The other options remains as defaults. Then click ```Create```:
+<img src="./images/create_GPU_cluster_step3.png" style="height: 90%; width: 90%;"/>
+
+Then you GPU cluster will be succussfully created:
+<img src="./images/create_GPU_cluster_step4.png" style="height: 90%; width: 90%;"/>
+
+You can click the into your GPU cluster to obtain the configuration information that will be used for submitting the jobs:
+Then you GPU cluster will be succussfully created:
+<img src="./images/create_GPU_cluster_step5.png" style="height: 90%; width: 90%;"/>
+
 
 ## Part 3 Train YoloV5 on Azure Machine Learning
 
@@ -175,7 +249,7 @@ The results of your inference is will be located at ```yolov5/runs/test/exp*```
 
 ### Step B. Create a training script
 
-### Step C. Submit the job and 
+### Step C. Submit the job and do the yolov5 training on cloud
 
 ### Step D. Check the running logs and download the weights
 
