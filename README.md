@@ -359,10 +359,16 @@ Open the file and create the script by the following steps:
     ```
 -   Add training command and start training
     ```
-    # make sure you have --save-dir to ../outputs/ in order to save all results after running
-    os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt --save-dir ../outputs/')
+    os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
     ```
-
+-   Inference using the best training weights
+    ```
+    python test.py --weights ./runs/weights/best.pt --data ../molecule_images/test/images --iou 0.60
+    ```
+-   Copy the training and test results to ``./outputs`` of your work directory. Only in that folder the results will be saved after job completion.
+    ```
+    # os.system('cp -r ./runs ../outputs/')
+    ```
 ### Step C. Submit the job and do the yolov5 training on cloud
 Now swith back to the notebook again, and set up experiment:
 ```
@@ -413,7 +419,7 @@ For this step, you can either download a pre-trained weights from this git repos
 
 To run test, simply use the following command under yolov5 directory:
 ```
-!python test.py --weights test_weights.pt --data ../molecule_images/test/images --iou 0.80
+python test.py --weights test_weights.pt --data ../molecule_images/test/images --iou 0.80
 ```
 
 The results of your inference is will be located at ```yolov5/runs/test/exp*```
