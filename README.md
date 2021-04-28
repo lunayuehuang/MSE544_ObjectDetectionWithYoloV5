@@ -156,31 +156,39 @@ As you might notice, training yolov5 model on your local machine can be very slo
 In order to train yolov5 on Azure GPU training clusters, you need to also create datasets that can be accessed by the clusters during training. The first two steps are intended to create data storage and upload the molecule dataset to cloud.
 
 First of all, go to Azure Machine Learning portal and sign in with UW account.Then choose the resource group for this class (named as ```rg-amlclass-<your-uw-id>```), and you will find a Azure Machine Learning Studio resource named as ```amlclass<your-uwid>```: 
+
 <img src="./images/navigate_to_amls_step1.png" style="height: 90%; width: 90%;"/>
 
 Click that resources, and in the following page click ```Launch studio```, you will be navigated to Azure Machine Learning Studio Home page. Also note that you can find the your storage account under this page, which you will be used for creating datastores.
+
 <img src="./images/navigate_to_amls_step2.png" style="height: 90%; width: 90%;"/>
 
 ### Step A. Create a DataStore
 Go to your Azure Machine Learning Studio Home page and selete ```Create new```, in the scrolled list, select ```Datastore```
+
 <img src="./images/create_datastore_step1.png" style="height: 90%; width: 90%;"/>
 
 In the prompted file, fill in all the fields other than ```SAS token``` as this:
 <img src="./images/create_datastore_step2.png" style="height: 90%; width: 90%;"/>
 
 For ```SAS token```, go back to your resource group page, select and click the corresponding storage account used by Machine Learning studio:
+
 <img src="./images/create_datastore_step3.png" style="height: 90%; width: 90%;"/>
 
 In the left side bar of the following page, search ```sas```, and then choose ```Shared access signature```
+
 <img src="./images/create_datastore_step4.png" style="height: 30%; width: 30%;"/>
 
 Once the right side is prompted, select all of the ```Allowed resource types```, double check the ```start and epiry data/time``` to make sure it cover the range of this tutorial. Then click ```Generate SAS and connection string``` 
+
 <img src="./images/create_datastore_step5.png" style="height: 90%; width: 90%;"/>
 
 The SAS token should be sucessfully generated at the end of this page:
+
 <img src="./images/create_datastore_step6.png" style="height: 90%; width: 90%;"/>
 
 Copy the ```SAS token``` and paste it back to previous datastore creation, and click ```Create```. Then you will successfully created a datastore:
+
 <img src="./images/create_datastore_step7.png" style="height: 90%; width: 90%;"/>
 
 ### Step B. Create a DataSets of molecule images
@@ -191,45 +199,58 @@ tar -cvf molecule_images.tar ./molecule_images
 ```
 
 Navigate back to your Home page of your Azure Machine Learning studio, choose ```Datasets``` from left side bar and then click ```+ Create dataset``` at the right window. Choose ```From local files``` in the scoll-up list.
+
 <img src="./images/create_dataset_step1.png" style="height: 90%; width: 90%;"/>
 
 Fill in the basic information in the prompted window and go ```Next```
+
 <img src="./images/create_dataset_step2.png" style="height: 90%; width: 90%;"/>
 
 In the following page, choose the one datastore you created in last step within ```previous created datastore``` and then click ```Select datastore```
+
 <img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
 
 Then click ```Browse```, in the scrolled list, choose ```Upload files```:
+
 <img src="./images/create_dataset_step4.png" style="height: 50%; width: 50%;"/>
 
 and select the tar file you made earlier ```molecule_image.tar```:
+
 <img src="./images/create_dataset_step5.png" style="height: 50%; width: 50%;"/>
 
 Click ```Next``` to initialize the uploading:
+
 <img src="./images/create_dataset_step6.png" style="height: 90%; width: 90%;"/>
 
 Once the uploading is finished, click ```Create``` in the summary page:
+
 <img src="./images/create_dataset_step7.png" style="height: 90%; width: 90%;"/>
 
 And a dataset is successfully created.
+
 <img src="./images/create_dataset_step8.png" style="height: 90%; width: 90%;"/>
 
 ### Step C. Create a GPU Training Cluster
 Navigate back to your home page of your Azure Machine Learning studio, and this time use ```Create new``` to create a ```Training cluster```
 And a dataset is successfully created.
+
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
 
 In the prompted window, choose options as this screenshot, and then click ```Next``` 
+
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
 In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` as ```120``` seconds. The other options remains as defaults. Then click ```Create```:
+
 <img src="./images/create_GPU_cluster_step3.png" style="height: 90%; width: 90%;"/>
 
 Then you GPU cluster will be succussfully created:
+
 <img src="./images/create_GPU_cluster_step4.png" style="height: 90%; width: 90%;"/>
 
 You can click the into your GPU cluster to obtain the configuration information that will be used for submitting the jobs:
 Then you GPU cluster will be succussfully created:
+
 <img src="./images/create_GPU_cluster_step5.png" style="height: 90%; width: 90%;"/>
 
 
@@ -424,27 +445,34 @@ print(aml_url)
 ```
 
 If the training job is successfully deployed, a url will be printed as output. Click the url will navigate you to the experiment you submitted on the Azure Machine Learning studio.
+
 <img src="./images/experiment_url.png" style="height: 90%; width: 90%;"/>
 
 You can check your previous experiments runs on your Azure Machine Learning home page. On the left panel click ```Experiments``` > ```<your-experiment-names>``` > ```Run <id>```.
+
 <img src="./images/check_experiment_step1.png" style="height: 90%; width: 90%;"/>
 <img src="./images/check_experiment_step2.png" style="height: 90%; width: 90%;"/>
 
 ### Step D. Check the running logs and download outputs
 
-On the experiement page, click ```Outputs + logs```
+On the experiement page, click ```Outputs + logs```：
+
 <img src="./images/check_log_and_download_ouput_step1.png" style="height: 90%; width: 90%;"/>
 
 Then from left panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```70_driver_log.txt```, which essentially contains the system output during job runing. Scroll the this log near the end, and make sure that you saw ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicating and the training and inference are complete, respectively.Double check on the left panel again, unfold the ```outputs``` > ```runs```, make sure that both ```detect``` and ```train``` are copied there.  
+
 <img src="./images/check_log_and_download_ouput_step2.png" style="height: 90%; width: 90%;"/>
 
 Now, you are ready to download the results (including training weights and inference labels) to your local machine by click ```Download all``` from the top panel. 
+
 <img src="./images/check_log_and_download_ouput_step3.png" style="height: 90%; width: 90%;"/>
 
 Choose the same folder ```MSE544_yolo_training``` for downloading and unzip the file, you will obtain a folder called ```ExperimentRun```:
+
 <img src="./images/check_results_step1.png" style="height: 90%; width: 90%;"/>
 
 And go into that folder, and you can explore all the training and dectection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
+
 <img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
 
 ### Step E. Inference using with YoloV5 weights on your local machine
