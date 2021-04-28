@@ -138,28 +138,17 @@ with open(yolo_yaml, 'w') as yamlout:
     )
 ```
 ### Step C. Training the YoloV5 modle on local machines    
-With all the label prepared, you can try to train a few epoch on your local machine by simpily go into ```yolov5``` folder:
+With all the label prepared, you can try to train a few epoch on your local machine by simpily go into ```yolov5``` folder from your notebook:
 ```
 %cd yolov5
 ```
-and then run the training command:
+and then run the training command in next cell:
 ```
 !python train.py --img 640 --batch 16 --epochs 1 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt
 ```
 As you might noticed that, training yolov5 model on your local machine is very slow, where the GPU training cluster on Azure Machine Learing could be used to speed up our training. 
 
 The logs of your training is will be located at ```yolov5/runs/train/exp*```.
-
-### Step D. Inference using YoloV5
-
-For this step, you can either download a pre-trained weights from this git repository(FIXME:comming soon), or wait until the end when you obtain a weights form cloud training.
-
-To run test, simply use the following command under yolov5 directory:
-```
-!python test.py --weights test_weights.pt --data ../molecule_images/test/images --iou 0.80
-```
-
-The results of your inference is will be located at ```yolov5/runs/test/exp*```
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning
 
@@ -245,15 +234,193 @@ Then you GPU cluster will be succussfully created:
 
 ## Part 3 Train YoloV5 on Azure Machine Learning
 
-### Step A. Set up training environment
+
+### Step A. Set up configurations for training environment
+
+Switch back to the notebook from part 1, and add a new cell and import helper functions from ```azureml.core```
+```
+from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
+from azureml.core.conda_dependencies import CondaDependencies
+```
+
+Define the python environment on GPU cluster:
+```
+yolov5_env = Environment(name="yolov5_env")
+
+yolov5_env.docker.base_image  = "mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.0.3-cudnn8-ubuntu18.04"
+
+conda_dep = CondaDependencies()
+conda_dep.add_conda_package('python=3.8')
+
+# install all the yolov5 requirement at the image build time
+with open('./yolov5/requirements.txt', 'r') as f:
+    line = f.readline()
+    
+    while line != '':        
+        if line.startswith('#') or len(line.split()) == 0:
+            line = f.readline()
+            continue
+        
+        conda_dep.add_pip_package(line.split()[0])
+        line = f.readline()
+
+yolov5_env.python.conda_dependencies=conda_dep
+```
+
+you can check the details of the enviroment you defined using
+```
+yolov5_env.get_image_details
+```
+
+And confirm that the python version is 3.8 or later from the output:
+```
+...
+            "dependencies": [
+                "python=3.8",
+                {
+                    "pip": [
+                        "azureml-defaults",
+                        "matplotlib>=3.2.2",
+                        "numpy>=1.18.5",
+                        "opencv-python>=4.1.2",
+                        "Pillow",
+                        "PyYAML>=5.3.1",
+                        "scipy>=1.4.1",
+                        "torch>=1.7.0",
+                        "torchvision>=0.8.1",
+                        "tqdm>=4.41.0",
+                        "tensorboard>=2.4.1",
+                        "seaborn>=0.11.0",
+                        "pandas",
+                        "thop",
+                        "pycocotools>=2.0"
+                    ]
+                }
+            ],
+...
+```
 
 ### Step B. Create a training script
+Open your terminal or use your GUI interface on your computer to navigate to the folder you created (```MSE544_yolo_training```) in part 1. Create a new folder (named by ```deploy_yolo_training```), which will be upload to Azure and used as the working directory.
+```
+mkdir deploy_yolo_training
+```  
+
+Go into the new directory, and create a python training script named as ```training_on_aml.py```
+
+Open the file and create the script by the following steps:
+
+- Connect to the datastore and download dataset
+    - import necessary packages
+    ```
+    from azureml.core import Workspace, Dataset, Run
+    import os, tempfile, tarfile
+    ```
+    - Make a temporary directory and mount molecule image dataset
+    ```
+    mounted_path = tempfile.mkdtemp()
+    print('Tmporary directory made at' + mounted_path)
+
+    # locate the molecule_images dataset
+    ws = Run.get_context().experiment.workspace
+    dataset = Dataset.get_by_name(ws, name='molecule_images_yolov5')
+
+    # mount data 
+    mount_context = dataset.mount(mounted_path)
+    mount_context.start()
+    
+    print("molecule_images dataset mounting done")
+    ```
+    - Untar files to the working directory
+    ```
+    # untar all files under this directory, 
+    for file in os.listdir(mounted_path):
+        if file.endswith('.tar'):
+            tar = tarfile.open(os.path.join(mounted_path, file))
+            tar.extractall()
+            tar.close()
+    ```
+- Set up yolov5 environment, very similar as part 1
+    ```
+    # this is needed for container
+    os.system('apt-get install -y python3-opencv')
+    
+    os.system('git clone https://github.com/ultralytics/yolov5')
+    
+    # since it's already in a container, no need to make new conda environment
+    os.chdir('./yolov5')
+    
+    # no need to install the requirements again
+    # os.system('pip install -r requirements.txt')
+
+    # check GPU
+    import torch
+    print(f"yolov5 enviroment setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name if torch.cuda.is_available() else 'CPU'})")
+    ```
+-   Add training command and start training
+    ```
+    # make sure you have --save-dir to ../outputs/ in order to save all results after running
+    os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt --save-dir ../outputs/')
+    ```
 
 ### Step C. Submit the job and do the yolov5 training on cloud
+Now swith back to the notebook again, and set up experiment:
+```
+subscription_id = '<your_subscription_id>'
+resource_group  = '<your_resoure_group>'
+workspace_name  = '<your_workspace_name>'
+ws = Workspace(subscription_id, resource_group, workspace_name)
+
+experiment = Experiment(workspace=ws, name='molecule_detection_yolo_training')
+```
+
+Then create script run configurations as:
+```
+# Overall configuration for the script to be run on the compute cluster
+config = ScriptRunConfig(source_directory='./deploy_yolo_training/',   ## folder in which the script is located
+                         script='training_on_aml.py',       ## script name
+                         compute_target='<your-gpu-cluster-name>',
+                         environment=yolov5_env)   
+```
+
+All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
+
+Check the running directory of your notebook by 
+```
+%pwd
+```
+and if not in folder ```MSE544_yolo_training```, switch to it by
+```
+%cd <path-to-MSE544_yolo_training>
+```
+
+Submit the job to the GPU cluster on Azure by execute the following in your notebook:
+```
+run = experiment.submit(config)
+aml_url = run.get_portal_url()
+print(aml_url)
+```
+
+If the training job is successfully deployed, a url will be printed as output. Click the url will navigate you to the experiment you submitted on the Azure Machine Learning studio.
+ <img src="./images/experiment_url.png" style="height: 90%; width: 90%;"/>
+
 
 ### Step D. Check the running logs and download the weights
 
+### Step E. Inference using YoloV5
+
+For this step, you can either download a pre-trained weights from this git repository(FIXME:comming soon), or wait until the end when you obtain a weights form cloud training.
+
+To run test, simply use the following command under yolov5 directory:
+```
+!python test.py --weights test_weights.pt --data ../molecule_images/test/images --iou 0.80
+```
+
+The results of your inference is will be located at ```yolov5/runs/test/exp*```
+
 ## Reference
+
+
 
 
 
