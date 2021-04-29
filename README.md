@@ -171,15 +171,15 @@ Navigate back to your Home page of your Azure Machine Learning studio instance, 
 
 <img src="./images/create_dataset_step1.png" style="height: 90%; width: 90%;"/>
 
-Fill in the basic information in the prompted window. In particular make sure to set the Dataset type to '''File''', then hit ```Next```
+Fill in the basic information in the prompted window. In particular make sure to set the Dataset type to ```File```, then hit ```Next```
 
 <img src="./images/create_dataset_step2.png" style="height: 90%; width: 90%;"/>
 
-In the following page, choose the default datastore (typically called "workspaceblobstore) that AML automatically creates with any workspace.
+In the following page, choose the default datastore (typically called "workspaceblobstore") that AML automatically creates with any workspace.
 
 <img src="./images/create_dataset_step3.png.jpg" style="height: 90%; width: 90%;"/>
 
-Then click the ```Upload``` button in the '''Select files for your dataset''', and choose ```Upload files```:
+Then click the ```Upload``` button in the ```Select files for your dataset``` section, and choose ```Upload files```:
 
 <img src="./images/create_dataset_step4.png" style="height: 50%; width: 50%;"/>
 
