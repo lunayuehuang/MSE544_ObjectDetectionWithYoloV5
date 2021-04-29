@@ -158,7 +158,7 @@ In order to train yolov5 on Azure GPU training clusters, you need to also create
 First of all, go to Azure Machine Learning portal (https://ml.azure.com) and sign in with your UW account. 
 At the top right of the window, select the dropdown to change workspace, and set the current workspace to your own (named ```aml-amlclass-<uwid>```).
 
-<img src="./images/aml_set_workspace.png" style="height: 90%; width: 90%;"/>
+<img src="./images/aml_set_workspace.png.jpg" style="height: 90%; width: 90%;"/>
 
 ### Step A. Create a DataSet of molecular images
 
@@ -177,7 +177,7 @@ Fill in the basic information in the prompted window. In particular make sure to
 
 In the following page, choose the default datastore (typically called "workspaceblobstore) that AML automatically creates with any workspace.
 
-<img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
+<img src="./images/create_dataset_step3.png.jpg" style="height: 90%; width: 90%;"/>
 
 Then click the ```Upload``` button in the '''Select files for your dataset''', and choose ```Upload files```:
 
