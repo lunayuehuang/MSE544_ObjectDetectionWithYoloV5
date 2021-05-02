@@ -473,19 +473,19 @@ For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is sh
 
 ### Step E. Inference using with YoloV5 weights on your local machine <a name="part3_stepe"></a>
 
-Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights (from file ```best.pt```) you got from the cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```. Make sure to replace ```<exp-id>``` with the runId that you want to use
+Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights (from file ```best.pt```) you got from the cloud to ```./yolov5/weights/```, and rename it as ```molecule_detection.pt```. Make sure to replace ```<exp-id>``` with the runId that you want to use
 ```
-cp ./ExperimentRun/<exp-id>/outputs/runs/train/weights/best.pt ./yolov5/weights/molecule_dectection.pt
+cp ./ExperimentRun/<exp-id>/outputs/runs/train/weights/best.pt ./yolov5/weights/molecule_detection.pt
 ```
 
-To run an inference, simply switch to yolov5 folder and use the same command you used in your script:
+To run an inference, simply use the same command you used in your script, specifying where to find the weights and images on which you want to detect molecules:
 ```
-python yolov5/detect.py --weights molecule_dectection.pt --iou 0.05 --save-txt --source ./molecule_images/test/images 
+python3 ./yolov5/detect.py --weights ./yolov5/weights/molecule_detection.pt --iou 0.05 --save-txt --source ./molecule_images/test/images 
 ```
 
 Note that you can switch to different models by changing the weight file after ```--weights``` and different testsets by changing the image source folder after ```--source```.
 
-The results of your inference will be located at ```runs/test/exp<id>```, and checking results will be the same as the instructions of step D.
+The results of your inference will be located at ```./runs/detect/exp<id>```, and checking results will be the same as the instructions of step D.
 
 ## Reference and Further Reading <a name="reference"></a>
 
