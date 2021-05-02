@@ -1,8 +1,25 @@
 # MSE544 Object Detection With YoloV5
 
-## Part 1 How to train and run YoloV5 on local machines
+## Table of Contents
 
-### Step A. Get YoloV5 and set up python environment
+- [Part 1 How to train and run YoloV5 on local machines](#part1)
+  - [Step A. Get YoloV5 and set up python environment](#part1_stepa) 
+  - [Step B. Prepare Yolo labels](#part1_stepb) 
+  - [Step C. Training the YoloV5 model on local machines](#part1_stepc) 
+- [Part 2 Create GPU training clusters and prepare training on Azure Machine Learning](#part2)
+  - [Step A. Create a DataSet of molecular images](#part2_stepa) 
+  - [Step B. Create a training script](#part2_stepb)
+- [Part 3 Train YoloV5 on Azure Machine Learning](#part3)
+  - [Step A. Set up configurations for training environment](#part3_stepa)
+  - [Step B. Create a training script](#part3_stepb)
+  - [Step C. Submit the job and do the yolov5 training on cloud](#part3_stepc)
+  - [Step D. Check the running logs and download outputs](#part3_stepd)
+  - [Step E. Inference using with YoloV5 weights on your local machine](#part3_stepe)
+- [Reference and Further Reading](#reference)
+
+## Part 1 How to train and run YoloV5 on local machines <a name="part1"></a>
+
+### Step A. Get YoloV5 and set up python environment <a name="part1_stepa"></a>
 
 Open your terminal and make a new directory named ```MSE544_yolo_training```(or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
 ```
@@ -26,7 +43,7 @@ In the first cell of the notebook, we'll install the requirements to complete th
 %pip install sklearn scikit-image azureml-core
 ```
 
-### Step B. Prepare Yolo labels
+### Step B. Prepare Yolo labels  <a name="part1_stepb"></a>
 
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
@@ -143,7 +160,7 @@ with open(yolo_yaml, 'w') as yamlout:
         sort_keys=False
     )
 ```
-### Step C. Training the YoloV5 model on local machines    
+### Step C. Training the YoloV5 model on local machines  <a name="part1_stepc"></a>
 With all the labels prepared, you can try to train a few epochs on your local machine:
 In your python notebook, run the following command in the next cell:
 ```python
@@ -154,7 +171,7 @@ The logs of your training is will be located at ```yolov5/runs/train/exp*```.
 As you might notice, training yolov5 model on your local machine can be very slow; because of this, we will try to use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
 
 
-## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning
+## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning  <a name="part2"></a>
 
 In order to train yolov5 on Azure GPU training clusters, you need to also create an AML (Azure Machine Learning) dataset that can be accessed by the cluster during training. The first step is intended to create the molecule dataset in the AML workspace.
 
@@ -163,7 +180,7 @@ At the top right of the window, select the dropdown to change workspace, and set
 
 <img src="./images/aml_set_workspace.png.jpg" style="height: 90%; width: 90%;"/>
 
-### Step A. Create a DataSet of molecular images
+### Step A. Create a DataSet of molecular images  <a name="part2_stepa"></a>
 
 Open your terminal and navigate to the folder you created (```MSE544_yolo_training```) in part 1. Tar the whole dataset in order to keep the data structure during upload.
 ```
@@ -202,7 +219,7 @@ At this point, your AML dataset has successfully been created!
 
 <img src="./images/create_dataset_step8.png" style="height: 90%; width: 90%;"/>
 
-### Step B. Create a GPU Training Cluster
+### Step B. Create a GPU Training Cluster <a name="part2_stepb"></a>
 Navigate back to the home page of your Azure Machine Learning studio instance, and this time use ```Create new``` to create a ```Training cluster```
 
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
@@ -224,10 +241,10 @@ You can click into your GPU cluster to obtain the configuration information that
 <img src="./images/create_GPU_cluster_step5.png" style="height: 90%; width: 90%;"/>
 
 
-## Part 3 Train YoloV5 on Azure Machine Learning
+## Part 3 Train YoloV5 on Azure Machine Learning <a name="part3"></a>
 
 
-### Step A. Set up configurations for training environment
+### Step A. Set up configurations for training environment <a name="part3_stepa"></a>
 
 Switch back to the notebook from part 1, and add a new cell and import helper functions from ```azureml.core```
 ```
@@ -292,7 +309,7 @@ And confirm that the python version is 3.8 or later from the output:
 ...
 ```
 
-### Step B. Create a training script
+### Step B. Create a training script <a name="part3_stepb"></a>
 Open your terminal or use your GUI interface on your computer to navigate to the folder you created (```MSE544_yolo_training```) in part 1. Create a new folder (named by ```deploy_yolo_training```), which will be upload to Azure and used as the working directory.
 ```
 mkdir deploy_yolo_training
@@ -380,7 +397,7 @@ Open the file and create the script by the following steps:
     
     Save your python training file and close it. 
 
-### Step C. Submit the job and do the yolov5 training on cloud
+### Step C. Submit the job and do the yolov5 training on cloud <a name="part3_stepc"></a>
 Now swith back to the notebook again, and set up an Azure ML experiment. Copy the values from your AML workspace. 
 ```
 subscription_id = '<your_subscription_id>'
@@ -426,7 +443,7 @@ You can check your previous experiments runs on your Azure Machine Learning home
 <img src="./images/check_experiment_step1.png" style="height: 90%; width: 90%;"/>
 <img src="./images/check_experiment_step2.png" style="height: 90%; width: 90%;"/>
 
-### Step D. Check the running logs and download outputs
+### Step D. Check the running logs and download outputs <a name="part3_stepd"></a>
 
 On the experiement page, click ```Outputs + logs```：
 
@@ -452,7 +469,7 @@ For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is sh
 
 <img src="./images/cm-2010-00417z_0001.jpeg" style="height: 90%; width: 90%;"/>
 
-### Step E. Inference using with YoloV5 weights on your local machine
+### Step E. Inference using with YoloV5 weights on your local machine <a name="part3_stepe"></a>
 
 Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights you got from cloud to ```./yolov5/weights/```, and rename it as ```molecule_dectection.pt```
 ```
@@ -468,7 +485,7 @@ Note that you can switch to different models by changing the weight file after `
 
 The results of your inference is will be located at ```yolov5/runs/test/exp<id>```, and checking results will be the same as the instructions of step D.
 
-## Reference and Further Reading
+## Reference and Further Reading <a name="reference"></a>
 
 [https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data](https://github.com/ultralytics/yolov5/wiki/Train-Custom-Data)
 
