@@ -13,30 +13,37 @@ Create a new conda enviroment with python 3.8 or later and install the required 
 ``` 
 conda create -n yolov5 python=3.8 jupyter notebook
 conda activate yolov5
+```
 
-cd yolov5 
-pip install -r requirements.txt  # packages required by yolov5
-pip install sklearn scikit-image azureml-core # other packages used in this tutorial 
+Now that we're done creating that virtual environment, let's create a new jupyter notebook named  ```molecule_detection_yolo_training.ipynb```.
+
+Once the notebook is open, make sure that the "yolov5" environment is selected for it. If not, switch to it. In case you do not see it in the list of available environments, try to reload the developer window (Command+Shift+P on Mac, or Ctrl+Shift+P on Windows, then type "reload" in the search box, and find "Developer: reload window" command). 
+
+
+In the first cell of the notebook, we'll install the requirements to complete this tutorial. Copy the following, then execute it
+```
+%pip install -r yolov5/requirements.txt 
+%pip install sklearn scikit-image azureml-core
 ```
 
 ### Step B. Prepare Yolo labels
 
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
-Go out of the ```yolov5``` folder (back to ```MSE544_yolo_training```) and copy the file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to current folder.
+Copy the file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to the current folder. Use Finder or Windows explorer do do this; or if you prefer command line, use the following:
 ``` 
 cd <path-to-MSE544_yolo_training>
 cp <path-to-Mse544-CustomVision>/util.py .
 ```
 
-Now, create a new jupyter notebook named  ```molecule_detection_yolo_training.ipynb```. In the first cell, import the utility functions:
+In the next cell of the notebook, import the utility functions:
 ```python
 from util import labeledImage, normalize_coordinates, convert_to_yolo_format
 from sklearn.model_selection import train_test_split
 import os, shutil, yaml
 ```
 
-Then use the helper class we have from Monday ```labeledImage``` to load all the labels that produced by ImageJ:
+Then use the helper class we have from Monday ```labeledImage``` to load all the labels that were produced by ImageJ:
 ```python
 source_images_dir = '<path-to-Mse544-CustomVision>/molecules/'
 source_labels_dir = '<path-to-Mse544-CustomVision>/molecules/labels/'
@@ -66,7 +73,7 @@ The output of this cell will show the size of training, validation and testing s
 (35, 10, 5)
 ```
 
-Next, let's organize our data directory hierarchy as:
+Next, we will organize our data directory hierarchy as:
 ```
 |---image_data
     |---training.yaml
@@ -137,13 +144,10 @@ with open(yolo_yaml, 'w') as yamlout:
     )
 ```
 ### Step C. Training the YoloV5 model on local machines    
-With all the labels prepared, you can try to train a few epochs on your local machine by simply going into your ```yolov5``` folder from your notebook:
+With all the labels prepared, you can try to train a few epochs on your local machine:
+In your python notebook, run the following command in the next cell:
 ```python
-%cd yolov5
-```
-and then run the training command in next cell:
-```python
-!python train.py --img 640 --batch 16 --epochs 1 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt
+%run yolov5/train.py --img 640 --batch 16 --epochs 1 --data ./molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt
 ```
 The logs of your training is will be located at ```yolov5/runs/train/exp*```.
 
@@ -301,16 +305,18 @@ Open the file and create the script by the following steps:
 - Connect to the datastore and download dataset
     - import necessary packages
     
-    ```
+    ```python
+    # import necessary packages
     from azureml.core import Workspace, Dataset, Run
     import os, tempfile, tarfile
     ```
     
     - Make a temporary directory and mount molecule image dataset
     
-    ```
+    ```python
+    # Make a temporary directory and mount molecule image dataset
     mounted_path = tempfile.mkdtemp()
-    print('Tmporary directory made at' + mounted_path)
+    print('Temporary directory made at' + mounted_path)
 
     # locate the molecule_images dataset
     ws = Run.get_context().experiment.workspace
@@ -325,7 +331,7 @@ Open the file and create the script by the following steps:
     
     - Untar files to the working directory
     
-    ```
+    ```python
     # untar all files under this directory, 
     for file in os.listdir(mounted_path):
         if file.endswith('.tar'):
@@ -336,7 +342,7 @@ Open the file and create the script by the following steps:
 
 - Set up yolov5 environment, very similar as part 1
     
-    ```
+    ```python
     # this is needed for container
     os.system('apt-get install -y python3-opencv')
     
@@ -355,24 +361,27 @@ Open the file and create the script by the following steps:
 
 -   Add training command and start training
     
-    ```
+    ```python
     os.system('python train.py --img 640 --batch 16 --epochs 100 --data ../molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
     ```
 
 -   Inference test images using the best training weights
     
-    ```
+    ```python
     os.system('python detect.py --weights ./runs/train/exp/weights/best.pt --iou 0.05 --save-txt --source ../molecule_images/test/images/')
     ```
 
 -   Copy the training and test results to ``./outputs`` of your work directory. Only in this way, the results can be saved and downloaded after job completion.
     
+    ```python
+    # Copy to the outputs folder so that the results get saved as part of the AML run
+    os.system('cp -r ./runs ../outputs/')
     ```
-    # os.system('cp -r ./runs ../outputs/')
-    ```
+    
+    Save your python training file and close it. 
 
 ### Step C. Submit the job and do the yolov5 training on cloud
-Now swith back to the notebook again, and set up experiment:
+Now swith back to the notebook again, and set up an Azure ML experiment. Copy the values from your AML workspace. 
 ```
 subscription_id = '<your_subscription_id>'
 resource_group  = '<your_resoure_group>'
@@ -382,7 +391,7 @@ ws = Workspace(subscription_id, resource_group, workspace_name)
 experiment = Experiment(workspace=ws, name='molecule_detection_yolo_training')
 ```
 
-Then create script run configurations as:
+Then create script run configurations as follows. All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
 ```
 # Overall configuration for the script to be run on the compute cluster
 config = ScriptRunConfig(source_directory='./deploy_yolo_training/',   ## folder in which the script is located
@@ -390,8 +399,6 @@ config = ScriptRunConfig(source_directory='./deploy_yolo_training/',   ## folder
                          compute_target='<your-gpu-cluster-name>',
                          environment=yolov5_env)   
 ```
-
-All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
 
 Check the running directory of your notebook by 
 ```
@@ -410,7 +417,7 @@ aml_url = run.get_portal_url()
 print(aml_url)
 ```
 
-If the training job is successfully deployed, a url will be printed as output. Click the url will navigate you to the experiment you submitted on the Azure Machine Learning studio.
+If the training job is successfully deployed, a url will be printed as output. Click the url will navigate you to the experiment you submitted on the Azure Machine Learning studio, where you can see its status. The first time you run it, Azure needs time to create the VM image that meets the requirements specified in the environment definition earlier, so for that initial run the status will show ```Preparing``` for about 20 minutes before it even starts allocating a node to execute your training script. Future runs that use the same environment configuration are going to be much faster. 
 
 <img src="./images/experiment_url.png" style="height: 90%; width: 90%;"/>
 
