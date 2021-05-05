@@ -14,7 +14,7 @@
   - [Step B. Create a training script](#part3_stepb)
   - [Step C. Submit the job and do the yolov5 training on cloud](#part3_stepc)
   - [Step D. Check the running logs and download outputs](#part3_stepd)
-  - [Step E. Inference using with YoloV5 weights on your local machine](#part3_stepe)
+- [Part 4. Inference using with YoloV5 weights on your local machine](#part4)
 - [Reference and Further Reading](#reference)
 
 ## Part 1 How to train and run YoloV5 on local machines <a name="part1"></a>
@@ -471,7 +471,7 @@ For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is sh
 
 <img src="./images/cm-2010-00417z_0001.jpeg" style="height: 90%; width: 90%;"/>
 
-### Step E. Inference using with YoloV5 weights on your local machine <a name="part3_stepe"></a>
+## Part 4. Inference using with YoloV5 weights on your local machine <a name="part4"></a>
 
 Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights (from file ```best.pt```) you got from the cloud to ```./yolov5/weights/```, and rename it as ```molecule_detection.pt```. Make sure to replace ```<exp-id>``` with the runId that you want to use
 ```
@@ -485,7 +485,7 @@ python3 ./yolov5/detect.py --weights ./yolov5/weights/molecule_detection.pt --io
 
 Note that you can switch to different models by changing the weight file after ```--weights``` and different testsets by changing the image source folder after ```--source```.
 
-The results of your inference will be located at ```./runs/detect/exp<id>```, and checking results will be the same as the instructions of step D.
+The results of your inference will be located at ```./runs/detect/exp<id>```, and checking results will be the same as the instructions of part 3 step D.
 
 ## Reference and Further Reading <a name="reference"></a>
 
