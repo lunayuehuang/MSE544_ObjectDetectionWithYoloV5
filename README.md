@@ -8,7 +8,7 @@
   - [Step C. Training the YoloV5 model on local machines](#part1_stepc) 
 - [Part 2 Create GPU training clusters and prepare training on Azure Machine Learning](#part2)
   - [Step A. Create a DataSet of molecular images](#part2_stepa) 
-  - [Step B. Create a training script](#part2_stepb)
+  - [Step B.  Create a GPU Training Cluster](#part2_stepb)
 - [Part 3 Train YoloV5 on Azure Machine Learning](#part3)
   - [Step A. Set up configurations for training environment](#part3_stepa)
   - [Step B. Create a training script](#part3_stepb)
