@@ -1,5 +1,7 @@
 # MSE544 Object Detection With YoloV5
 
+Author: [Hang Hu](https://github.com/hanghu) & [Luna Huang](https://github.com/lunayuehuang) 
+
 ## Table of Contents
 
 - [Part 1 How to train and run YoloV5 on local machines](#part1)
