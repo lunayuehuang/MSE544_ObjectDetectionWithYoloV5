@@ -44,6 +44,12 @@ In the first cell of the notebook, we'll install the requirements to complete th
 %pip install -r yolov5/requirements.txt 
 %pip install sklearn scikit-image azureml-core
 ```
+If you are PC user, you might need to run command if you are not in the administrator account 
+
+```
+%pip install -r yolov5/requirements.txt --user
+%pip install sklearn scikit-image azureml-core --user
+```
 
 ### Step B. Prepare Yolo labels  <a name="part1_stepb"></a>
 
