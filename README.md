@@ -28,28 +28,24 @@ Open your terminal and make a new directory named ```MSE544_yolo_training```(or 
 git clone https://github.com/ultralytics/yolov5
 ```
 
-Create a new conda enviroment with python 3.8 or later and install the required packages for Yolo; for that, copy the below in a terminal window then hit ```enter```:
+Create a new conda enviroment with python 3.9 or later and install the required packages for Yolo; for that, copy the below in a terminal window then hit ```enter```:
 ``` 
-conda create -n yolov5 python=3.8 jupyter notebook
+conda create -n yolov5 python=3.9 jupyter notebook
 conda activate yolov5
 ```
 
-Now that we're done creating that virtual environment, let's create a new jupyter notebook named  ```molecule_detection_yolo_training.ipynb```.
+Now that we're done creating and activating that virtual environment, let's create a new jupyter notebook named  ```molecule_detection_yolo_training.ipynb```.
 
 Once the notebook is open, make sure that the "yolov5" environment is selected for it. If not, switch to it. In case you do not see it in the list of available environments, try to reload the developer window (Command+Shift+P on Mac, or Ctrl+Shift+P on Windows, then type "reload" in the search box, and find "Developer: reload window" command). 
 
 
 In the first cell of the notebook, we'll install the requirements to complete this tutorial. Copy the following, then execute it
 ```
-%pip install -r yolov5/requirements.txt 
-%pip install sklearn scikit-image azureml-core
-```
-If you are PC user, you might need to run command if you are not in the administrator account 
-
-```
-%pip install -r yolov5/requirements.txt --user
+%pip install -r yolov5/requirements.txt --user 
 %pip install sklearn scikit-image azureml-core --user
 ```
+
+After installing the required packages, you should restart the kernel.
 
 ### Step B. Prepare Yolo labels  <a name="part1_stepb"></a>
 
@@ -70,8 +66,14 @@ import os, shutil, yaml
 
 Then use the helper class we have from Monday ```labeledImage``` to load all the labels that were produced by ImageJ:
 ```python
-source_images_dir = '<path-to-Mse544-CustomVision>/molecules/'
-source_labels_dir = '<path-to-Mse544-CustomVision>/molecules/labels/'
+# Set the path to the root folder that contains images and labels
+# Example:
+#    - PC: path_to_Mse544_cv = 'C:/Users/Luna/DataScience/Mse544-CustomVision'
+#    - Mac: path_to_Mse544_cv = '/Users/luna/Mse-544-CustomVision'
+path_to_Mse544_cv = '<enter path here>'
+
+source_images_dir = f'{path_to_Mse544_cv}/molecules/'
+source_labels_dir = f'{path_to_Mse544_cv}/molecules/labels/'
 
 labeled_images = []
 tag = 'molecule' 
@@ -116,7 +118,7 @@ where ```training.yaml``` is a configuration file for yolo that stores all the p
 
 ```python
 # Create the molecule_images directory if it doesn't exist
-output_dir = './molecule_images'
+output_dir = os.path.join(os.getcwd(),'molecule_images')
 if not os.path.exists(output_dir): os.mkdir(output_dir)
 
 train_dir = os.path.join(output_dir, 'train') 
