@@ -211,7 +211,7 @@ In the following page, choose the default datastore (typically called "workspace
 
 Then click the ```Browse``` button in the ```Select files for your dataset``` section, and choose ```Browse files```:
 
-<img src="./images/create_dataset_step4.png" style="height: 50%; width: 50%;"/>
+<img src="./images/create_dataset_step4.png" style="height: 75%; width: 75%;"/>
 
 and select the tar file you made earlier ```molecule_image.tar```:
 
