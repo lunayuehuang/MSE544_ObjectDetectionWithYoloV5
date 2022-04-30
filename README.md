@@ -207,7 +207,7 @@ Fill in the basic information in the prompted window. In particular make sure to
 
 In the following page, choose the default datastore (typically called "workspaceblobstore") that AML automatically creates with any workspace.
 
-<img src="./images/create_dataset_step3.png.jpg" style="height: 90%; width: 90%;"/>
+<img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
 
 Then click the ```Upload``` button in the ```Select files for your dataset``` section, and choose ```Upload files```:
 
