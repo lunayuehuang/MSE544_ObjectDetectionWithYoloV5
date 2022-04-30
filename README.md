@@ -219,8 +219,6 @@ and select the tar file you made earlier ```molecule_image.tar```:
 
 Click ```Next``` to start the upload:
 
-<img src="./images/create_dataset_step6.png" style="height: 90%; width: 90%;"/>
-
 Once the upload has completed, click ```Create``` in the summary page:
 
 <img src="./images/create_dataset_step7.png" style="height: 90%; width: 90%;"/>
