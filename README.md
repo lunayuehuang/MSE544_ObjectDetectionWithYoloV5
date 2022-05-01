@@ -234,7 +234,7 @@ Navigate back to the home page of your Azure Machine Learning studio instance, a
 
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
 
-At the prompt, choose options as indicated in the following screenshot, and then click ```Next``` 
+At the prompt, choose options as indicated in the following screenshot, except that you should choose ```Location = "Central US"```, then click ```Next```. 
 
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
@@ -242,7 +242,7 @@ In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set `
 
 <img src="./images/create_GPU_cluster_step3.png" style="height: 90%; width: 90%;"/>
 
-Your GPU cluster has now been succussfully created:
+Your GPU cluster has now been successfully created:
 
 <img src="./images/create_GPU_cluster_step4.png" style="height: 90%; width: 90%;"/>
 
