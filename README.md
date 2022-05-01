@@ -495,11 +495,11 @@ Now, you are ready to download the results (including training weights and infer
 
 <img src="./images/check_log_and_download_ouput_step3.png" style="height: 90%; width: 90%;"/>
 
-Choose the same folder ```MSE544_yolo_training``` for downloading the file, and unzip it. You will obtain a folder called ```ExperimentRun```:
+Choose the same folder ```MSE544_yolo_training``` for downloading the file (named ``Run_<run_name>_OutputsAndLogs.zip``), and unzip it. You will obtain a folder called ```Run_<Run_name>_OutputsAndLogs```:
 
 <img src="./images/check_results_step1.png" style="height: 90%; width: 90%;"/>
 
-Go into that folder, and you can explore all the training and detection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` resulting from the training that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
+Go into that folder, then to the ``outputs/runs`` subfolder, and you can explore all the training and detection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` resulting from the training that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
 
 <img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
 
@@ -509,19 +509,19 @@ For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is sh
 
 ## Part 4. Inference using with YoloV5 weights on your local machine <a name="part4"></a>
 
-Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights (from file ```best.pt```) you got from the cloud to ```./yolov5/weights/```, and rename it as ```molecule_detection.pt```. Make sure to replace ```<exp-id>``` with the runId that you want to use
+Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best weights (from file ```best.pt```) you got from the cloud to the current directory, and rename it as ```molecule_detection.pt```. Make sure to replace ```<RunName>``` with the name of the experiment run that you want to use.
 ```
-cp ./ExperimentRun/<exp-id>/outputs/runs/train/weights/best.pt ./yolov5/weights/molecule_detection.pt
-```
-
-To run an inference, simply use the same command you used in your script, specifying where to find the weights and images on which you want to detect molecules:
-```
-python3 ./yolov5/detect.py --weights ./yolov5/weights/molecule_detection.pt --iou 0.05 --save-txt --source ./molecule_images/test/images 
+cp ./Run_<RunName>_OutputsAndLogs/outputs/runs/train/exp/weights/best.pt ./molecule_detection.pt
 ```
 
-Note that you can switch to different models by changing the weight file after ```--weights``` and different testsets by changing the image source folder after ```--source```.
+To run an inference, simply use the same command you used in your script, specifying where to find the weights and images on which you want to detect molecules. Make sure you have activated your yolov5 conda environment.Depending on your setup, you may need to use command ``python3`` or ``python``.
+```
+python ./yolov5/detect.py --weights molecule_detection.pt --iou 0.05 --save-txt --source ./molecule_images/test/images 
+```
 
-The results of your inference will be located at ```./runs/detect/exp<id>```, and checking results will be the same as the instructions of part 3 step D.
+Note that you can switch to different models by changing the weight file after ```--weights``` and different test sets by changing the image source folder after ```--source```.
+
+The results of your inference will be located at ```./yolov5/runs/detect/exp```, and checking results will be the same as the instructions of part 3 step D.
 
 ## Reference and Further Reading <a name="reference"></a>
 
