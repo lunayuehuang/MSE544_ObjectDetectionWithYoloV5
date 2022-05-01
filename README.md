@@ -23,7 +23,7 @@ Author: [Hang Hu](https://github.com/hanghu) & [Luna Huang](https://github.com/l
 
 ### Step A. Get YoloV5 and set up python environment <a name="part1_stepa"></a>
 
-Open your terminal and make a new directory named ```MSE544_yolo_training```(or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
+Open your terminal and make a new directory named ```MSE544_yolo_training``` (or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
 ```
 git clone https://github.com/ultralytics/yolov5
 ```
@@ -178,7 +178,7 @@ In your python notebook, run the following command in the next cell:
 ```
 The logs of your training is will be located at ```yolov5/runs/train/exp*```.
 
-As you might notice, training yolov5 model on your local machine can be very slow; because of this, we will try to use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
+As you might notice, training yolov5 model on your local machine can be very slow, even with a single epoch being run; because of this, we will try to use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
 
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning  <a name="part2"></a>
@@ -232,11 +232,11 @@ Navigate back to the home page of your Azure Machine Learning studio instance, a
 
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
 
-At the prompt, choose options as indicated in the following screenshot, except that you should choose ```Location = "Central US"```, then click ```Next```. 
+At the prompt, choose options: Location = ```"Central US"```, VM priority = ```Dedicated VM```, VM type = ```GPU``` and VM Size = ```Standard_NC6s_v3```,  then click ```Next```. 
 
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
-In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` to ```120``` seconds. The other options may remain as per defaults. Then click ```Create```:
+In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` to ```120``` seconds. The other options may remain as per defaults. This will ensure that after a couple of minutes of inactivity, the cluster will deprovision the GPU, avoiding unnecessary costs. Then click ```Create```:
 
 <img src="./images/create_GPU_cluster_step3.png" style="height: 90%; width: 90%;"/>
 
@@ -260,40 +260,43 @@ from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
 from azureml.core.conda_dependencies import CondaDependencies
 ```
 
-Define the python environment on GPU cluster:
+Define the python environment that will be used on the GPU cluster:
 ```python
 yolov5_env = Environment(name="yolov5_env")
 
+# Start from a base docker environments defined by Microsoft
 yolov5_env.docker.base_image  = "mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.0.3-cudnn8-ubuntu18.04"
 
 conda_dep = CondaDependencies()
-conda_dep.add_conda_package('python=3.8')
+# Indicate which version of python needs to be installed
+conda_dep.add_conda_package('python=3.9')
 
 # install all the yolov5 requirement at the image build time
 with open('./yolov5/requirements.txt', 'r') as f:
     line = f.readline()
     
-    while line != '':        
+    while line != '':    
+        # If the line is a comment or empty, skip it    
         if line.startswith('#') or len(line.split()) == 0:
             line = f.readline()
             continue
-        
+        # Otherwise add the corresponding package name as a dependency
         conda_dep.add_pip_package(line.split()[0])
+        # Then move on to the next line in the requirements.txt file
         line = f.readline()
 
 yolov5_env.python.conda_dependencies=conda_dep
 ```
 
-you can check the details of the enviroment you defined in a new cell using
+You can check the details of the enviroment you defined in a new cell using
 ```python
 yolov5_env.get_image_details
 ```
-
-And confirm that the python version is 3.8 or later from the output:
+And confirm that the python version is 3.9 or later from the output:
 ```python
 ...
             "dependencies": [
-                "python=3.8",
+                "python=3.9",
                 {
                     "pip": [
                         "azureml-defaults",
@@ -318,14 +321,15 @@ And confirm that the python version is 3.8 or later from the output:
 ```
 
 ### Step B. Create a training script <a name="part3_stepb"></a>
-Open your terminal or use your GUI interface on your computer to navigate to the folder you created (```MSE544_yolo_training```) in part 1. Create a new folder (named by ```deploy_yolo_training```), which will be upload to Azure and used as the working directory.
+Open your terminal or use your GUI interface on your computer to navigate to the folder you created (```MSE544_yolo_training```) in part 1. Create a new subfolder (named ```deploy_yolo_training```), which will contain the training script that will be deployed to the GPU VM in Azure.
 ```
 mkdir deploy_yolo_training
+cd deploy_yolo_training
 ```  
 
-Go into the new directory, and create a python training script named as ```training_on_aml.py```
+Go into the new directory, and create a new file  named ```training_on_aml.py```, which will be the actual training script. 
 
-Open the file and create the script using the following steps:
+Let's now copy the relevant processing steps into that script file:
 
 - Connect to the datastore and download dataset
     - import necessary packages
@@ -333,10 +337,10 @@ Open the file and create the script using the following steps:
     ```python
     # import necessary packages
     from azureml.core import Workspace, Dataset, Run
-    import os, tempfile, tarfile
+    import os, tempfile, tarfile, yaml
     ```
     
-    - Create a temporary directory and download the molecule image dataset
+    - Create a temporary directory and download the molecule image dataset in that directory
     
     ```python
     # Make a temporary directory and mount molecule image dataset
@@ -344,7 +348,7 @@ Open the file and create the script using the following steps:
     mounted_path = './tmp'
     print('Temporary directory made at' + mounted_path)
 
-    # Get the molecule dataset and download it
+    # Get the molecule dataset from the current workspace, and download it
     print("Fetching dataset")
     ws = Run.get_context().experiment.workspace
     dataset = Dataset.get_by_name(ws, name='molecule_images_yolov5')
@@ -361,14 +365,13 @@ Open the file and create the script using the following steps:
     # untar all files under this directory, 
     for file in os.listdir(mounted_path):
         if file.endswith('.tar'):
-            print("Found tar file:")
-            print(file)
+            print(f"Found tar file: {file}")
             tar = tarfile.open(os.path.join(mounted_path, file))
             tar.extractall()
             tar.close()
     
     print("")
-    print("Check the molecule_images folder content")
+    print("Content of the molecule_images folder:")
     print(os.listdir(os.path.join(".","molecule_images")))
     ```
 
@@ -380,13 +383,37 @@ Open the file and create the script using the following steps:
     
     print("Cloning yolov5")
     os.system('git clone https://github.com/ultralytics/yolov5')
+    print()
 
-    # check GPU
+    # Let's check that pytorch recognizes the GPU
     import torch
     print(f"yolov5 enviroment setup complete. Using torch {torch.__version__} ({torch.cuda.get_device_properties(0).name if torch.cuda.is_available() else 'CPU'})")
     ```
 
--   Add training command and start training, using 100 epochs
+- Create a yolov5 yaml file that will tell the main yolo training script where to find the training data
+
+    ```python
+    # Generate yaml config file for run on Azure GPU
+    yolo_yaml = os.path.join('.', 'molecule_detection_yolov5.yaml')
+
+    tag = 'molecule' 
+    tags = [tag]
+    with open(yolo_yaml, 'w') as yamlout:
+        yaml.dump(
+            {'train': os.path.join('../molecule_images','train'),
+            'val': os.path.join('../molecule_images','val'),
+            'nc': len(tags),
+            'names': tags},
+            yamlout,
+            default_flow_style=None,
+            sort_keys=False
+        )
+
+    # Let's copy the yaml file to the "./outputs" folder we well so we can find it in the logs of the experiment once it's complete
+    os.system('cp ./molecule_detection_yolov5.yaml ./outputs/molecule_detection_yolov5.yaml')
+    ```
+
+-   Add training command and start training, using 100 epochs (remember: we only did a single epoch when using local machines)
     
     ```python
     os.system('python yolov5/train.py --img 640 --batch 16 --epochs 100 --data ./molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
@@ -418,7 +445,8 @@ ws = Workspace(subscription_id, resource_group, workspace_name)
 experiment = Experiment(workspace=ws, name='molecule_detection_yolo_training')
 ```
 
-Then create script run configurations as follows. All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
+Then create a script run configurations as follows. All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
+This takes takes as input a ``source_directory`` which will be copied to the Azure VM and should contain your training script, a ``script`` which is the file name of your script in that source_directory which will be run automatically by Azure when the VM setup has completed, a ``compute_target`` which indicates which compute the script should be deployed to, and the ``environment`` which we defined earlier indicating what all needs to be installed on the VM as pre-requisites.
 ```python
 # Overall configuration for the script to be run on the compute cluster
 config = ScriptRunConfig(source_directory='./deploy_yolo_training/',   ## folder in which the script is located
@@ -427,9 +455,9 @@ config = ScriptRunConfig(source_directory='./deploy_yolo_training/',   ## folder
                          environment=yolov5_env)   
 ```
 
-Check the running directory of your notebook by 
+Check the running directory of your notebook by running
 ```python
-%pwd
+os.getcwd()
 ```
 and if you are not in folder ```MSE544_yolo_training```, switch to it by
 ```python
@@ -459,7 +487,7 @@ On the experiment page, click ```Outputs + logs```：
 
 <img src="./images/check_log_and_download_ouput_step1.png" style="height: 90%; width: 90%;"/>
 
-Then from on the left-hand panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```70_driver_log.txt```. THat log file contains the system output from the job you submitted, and in particular all print statements are going to be found there. Scroll through this log until near the end, and make sure that you see ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicate that the training and inference are complete respectively.Double check on the left hand side panel again, unfold the ```outputs``` > ```runs``` directory, and make sure that both ```detect``` and ```train``` are copied there.  
+Then from on the left-hand panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```70_driver_log.txt```. THat log file contains the system output from the job you submitted, and in particular all print statements from the training script are going to be found there. Scroll through this log until near the end, and make sure that you see ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicate that the training and inference are complete respectively.Double check on the left hand side panel again, unfold the ```outputs``` > ```runs``` directory, and make sure that both ```detect``` and ```train``` folders are there.  
 
 <img src="./images/check_log_and_download_ouput_step2.png" style="height: 90%; width: 90%;"/>
 
@@ -471,7 +499,7 @@ Choose the same folder ```MSE544_yolo_training``` for downloading the file, and 
 
 <img src="./images/check_results_step1.png" style="height: 90%; width: 90%;"/>
 
-Go into that folder, and you can explore all the training and detection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
+Go into that folder, and you can explore all the training and detection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` resulting from the training that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
 
 <img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
 
