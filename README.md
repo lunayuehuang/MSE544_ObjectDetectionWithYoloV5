@@ -501,11 +501,11 @@ Choose the same folder ```MSE544_yolo_training``` for downloading the file (name
 
 Go into that folder, then to the ``outputs/runs`` subfolder, and you can explore all the training and detection results. Within the ```train``` folder, there are plots of images with labels and metrics throughout the training. Most importantly there are ```weights``` resulting from the training that can be used for inference or more trainings in the future. Within the ```detect``` folder, there are plots of images with predicted labels and also the labels files for each image if you used ```--save-txt``` in your inference command.
 
-<img src="./images/check_results_step2.png" style="height: 90%; width: 90%;"/>
+<img src="./images/check_results_step2.png" style="height: 90%; width: 40%;"/>
 
 For example, one of the inference results, ```cm-2010-00417z_0001.jpeg```, is shown as:
 
-<img src="./images/cm-2010-00417z_0001.jpeg" style="height: 90%; width: 90%;"/>
+<img src="./images/cm-2010-00417z_0001.jpeg" style="height: 90%; width: 80%;"/>
 
 ## Part 4. Inference using with YoloV5 weights on your local machine <a name="part4"></a>
 
