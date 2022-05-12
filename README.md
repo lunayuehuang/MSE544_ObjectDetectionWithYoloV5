@@ -372,7 +372,8 @@ Let's now copy the relevant processing steps into that script file:
     
     print("")
     print("Content of the molecule_images folder:")
-    print(os.listdir(os.path.join(".","molecule_images")))
+    molecule_images_folder = os.path.join(".","molecule_images")
+    print(os.listdir(molecule_images_folder))
     ```
 
 - Set up yolov5 environment, very similar to part 1
@@ -381,9 +382,14 @@ Let's now copy the relevant processing steps into that script file:
     # this is needed for container
     os.system('apt-get install -y python3-opencv')
     
+    print("Current Directory:")
+    print(os.getcwd())
+    print()
+    
     print("Cloning yolov5")
     os.system('git clone https://github.com/ultralytics/yolov5')
-    print()
+    print("Check content of '.' folder:")
+    print(os.listdir('.'))
 
     # Let's check that pytorch recognizes the GPU
     import torch
@@ -416,20 +422,20 @@ Let's now copy the relevant processing steps into that script file:
 -   Add training command and start training, using 100 epochs (remember: we only did a single epoch when using local machines)
     
     ```python
-    os.system('python yolov5/train.py --img 640 --batch 16 --epochs 100 --data ./molecule_images/molecule_detection_yolov5.yaml --weights yolov5s.pt')
+    os.system('python yolov5/train.py --img 640 --batch 16 --epochs 100 --data ./molecule_detection_yolov5.yaml --weights yolov5s.pt')
     ```
 
 -   Inference test images using the best training weights
     
     ```python
-    os.system('python yolov5/detect.py --weights ./runs/train/exp/weights/best.pt --iou 0.05 --save-txt --source ./molecule_images/test/images/')
+    os.system('python yolov5/detect.py --weights ./yolov5/runs/train/exp/weights/best.pt --iou 0.05 --save-txt --source ./molecule_images/test/images/')
     ```
 
 -   Copy the training and test results to ``./outputs`` of your work directory. Only in this way, the results can be saved and downloaded after job completion.
     
     ```python
     # Copy to the outputs folder so that the results get saved as part of the AML run
-    os.system('cp -r ./runs ./outputs/')
+    os.system('cp -r ./yolov5/runs ./outputs/')
     ```
     
     Save your python training file and close it. 
