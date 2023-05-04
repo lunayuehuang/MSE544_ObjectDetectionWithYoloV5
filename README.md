@@ -55,11 +55,15 @@ After installing the required packages, you should restart the kernel.
 
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
+To make our tutorial easier to follow, we wrote a few fuctions and combined them in the util.py file, you will need to copy this file into your current folder to import these functions. For students who are interested in how these functions are achieved, or willing to improve your python code reading and writing, please feel free to read into this file. 
+
 Copy the file ```util.py``` from ```<path-to-Mse544-CustomVision>``` to the current folder. Use Finder or Windows explorer do do this; or if you prefer command line, use the following:
 ``` 
 cd <path-to-MSE544_yolo_training>
 cp <path-to-Mse544-CustomVision>/util.py .
 ```
+
+
 
 In the next cell of the notebook, import the utility functions:
 ```python
