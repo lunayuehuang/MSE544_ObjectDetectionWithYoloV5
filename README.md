@@ -25,6 +25,8 @@ This is a tutorial prepared for University of Washington MSE 544 class. In this 
 
 ## Part 1 How to train and run YoloV5 on local machines <a name="part1"></a>
 
+YOLO, short for " you only look once" is a popular object detection algorithm in computer vision that was first introduce by group of Professor Ali Farhadi, University of Washington, in 2016. YOLO was the first algortihm that made real time object detection possible. Since then, it has being through several iterations and has been improved continuely. Currently the latest version is YOLOv8, however, YOLOv5 famous for its easy to use and very high accuracy, is still one of the most common used versions of YOLO.   
+
 ### Step A. Get YoloV5 and set up python environment <a name="part1_stepa"></a>
 
 Open your terminal and make a new directory named ```MSE544_yolo_training``` (or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
