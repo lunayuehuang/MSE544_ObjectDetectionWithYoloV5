@@ -4,7 +4,9 @@ Author: [Hang Hu](https://github.com/hanghu) & [Luna Huang](https://github.com/l
 
 This is a tutorial prepared for University of Washington MSE 544 class. In this tutorial, students will learn how to train and run YoloV5 on local machines; how to create GPU training clusters using Azure Machine Learning; how to depoly a project to Azure and running machine learning with Azure Machine Learning; and how to inference using trained model locally. 
 
+In this tutorial, we would like to demonstrate how to build the work flow to adopt a model from a well documented open source model, and use cloud computing resources to train the model for your specific project. AML(Azure Machine Learning Studio) is also introduced to our students for the first time. AML provides a platform that we can build, train, and deploy machine learning models in the Microsoft Azure Cloud. Comparing with directly use Azure Cloud VM, AML also provide features and tools for users to monitor the performance of the models more efficiently. 
 
+We also demonstrate how to use computer cluster instead of computer instance on cloud in this tutorial  
 
 ## Table of Contents
 
