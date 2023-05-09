@@ -457,10 +457,11 @@ Let's now copy the relevant processing steps into that script file:
 
 ### Step C. Submit the job and do the yolov5 training on cloud <a name="part3_stepc"></a>
 Now swith back to the notebook again, and set up an Azure ML experiment. 
-import the azureml.core classes 
+If you haven't, import the azureml.core classes 
 
 ```# import necessary packages
-from azureml.core import Workspace, Dataset, Run, Experiment
+from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
+from azureml.core.conda_dependencies import CondaDependencies
 ```
 After import, add another cell and connect your notebook to your AML workspace: 
 Here you need to modify the cell based on the configuration information you can see when you build your GPU cluster or from your AML workspace info. 
