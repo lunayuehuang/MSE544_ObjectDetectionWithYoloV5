@@ -220,7 +220,7 @@ Fill in the basic information in the prompted window. In particular make sure to
 
 <img src="./images/create_dataset_step2.png" style="height: 90%; width: 90%;"/>
 
-In the following page, choose the default datastore (typically called "workspaceblobstore") that AML automatically creates with any workspace.
+In the following page, choose the default datastore (typically called "Azure Blob Storage") that AML automatically creates with any workspace.
 
 <img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
 
