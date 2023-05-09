@@ -529,7 +529,7 @@ Now, you are ready to download the results (including training weights and infer
 
 <img src="./images/check_log_and_download_ouput_step3.png" style="height: 90%; width: 90%;"/>
 
-Choose the same folder ```MSE544_yolo_training``` for downloading the file (named ``Run_<run_name>_OutputsAndLogs.zip``), and unzip it. You will obtain a folder called ```Run_<Run_name>_OutputsAndLogs```:
+Choose the same folder ```MSE544_yolo_training``` for downloading the file (named ``Job_<run_name>_OutputsAndLogs.zip``), and unzip it. You will obtain a folder called ```Job_<Run_name>_OutputsAndLogs```: <run-name> is randomly generated strings instead of sequential numbers. 
 
 <img src="./images/check_results_step1.png" style="height: 90%; width: 90%;"/>
 
