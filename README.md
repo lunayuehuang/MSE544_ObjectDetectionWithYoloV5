@@ -31,7 +31,7 @@ YOLO, short for " you only look once" is a popular object detection algorithm in
 
 ### Step A. Get YoloV5 and set up python environment <a name="part1_stepa"></a>
 
-Open your terminal and make a new directory named ```MSE544_yolo_training``` (or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub:
+Open your terminal and make a new directory named ```MSE544_yolo_training``` (or any other name of your choice). Switch into the directory and then clone the yolo repository from GitHub (pay attention that this is the repository from yolo, not specified for our tutorial):
 ```
 git clone https://github.com/ultralytics/yolov5
 ```
@@ -56,6 +56,7 @@ In the first cell of the notebook, we'll install the requirements to complete th
 After installing the required packages, you should restart the kernel.
 
 ### Step B. Prepare Yolo labels  <a name="part1_stepb"></a>
+This step is to prepare your input data to the structure and format that is fit the yolo training. 
 
 Locate the repository (https://github.com/lunayuehuang/Mse544-CustomVision) from Monday's class or clone it if you haven't done so. In the rest of this tutorial, the path of Monday's repository will refer as ```<path-to-Mse544-CustomVision>```, which will be replaced by the real path on your computer. 
 
@@ -69,7 +70,7 @@ cp <path-to-Mse544-CustomVision>/util.py .
 
 
 
-In the next cell of the notebook, import the utility functions:
+In the next cell of the notebook, import the utility functions we prepared for this tutorial:
 ```python
 from util import labeledImage, normalize_coordinates, convert_to_yolo_format
 from sklearn.model_selection import train_test_split
@@ -190,7 +191,9 @@ In your python notebook, run the following command in the next cell:
 ```
 The logs of your training is will be located at ```yolov5/runs/train/exp*```.
 
-As you might notice, training yolov5 model on your local machine can be very slow, even with a single epoch being run; because of this, we will try to use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
+Now you complete 1 epoch of training of your dataset. 
+
+As you might notice, training yolov5 model on your local machine can be very slow or fast, highly depend on your PC hardware; After test local run correctly, we will move this training to Azure and use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
 
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning  <a name="part2"></a>
