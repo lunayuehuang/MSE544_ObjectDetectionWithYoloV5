@@ -456,7 +456,14 @@ Let's now copy the relevant processing steps into that script file:
     Save your python training file and close it. 
 
 ### Step C. Submit the job and do the yolov5 training on cloud <a name="part3_stepc"></a>
-Now swith back to the notebook again, and set up an Azure ML experiment. Copy the values from your AML workspace. 
+Now swith back to the notebook again, and set up an Azure ML experiment. 
+import the azureml.core classes 
+
+```# import necessary packages
+from azureml.core import Workspace, Dataset, Run, Experiment
+```
+After import, add another cell and connect your notebook to your AML workspace: 
+Here you need to modify the cell based on the configuration information you can see when you build your GPU cluster or from your AML workspace info. 
 ```python
 subscription_id = '<your_subscription_id>'
 resource_group  = '<your_resoure_group>'
@@ -465,6 +472,8 @@ ws = Workspace(subscription_id, resource_group, workspace_name)
 
 experiment = Experiment(workspace=ws, name='molecule_detection_yolo_training')
 ```
+
+running this cell might prompt you to sign in to your AML using your UWID through browser.  
 
 Then create a script run configurations as follows. All the field within each ```<>``` can be found at the end of Part 2 Step C and they need to be replaced with your own values before proceeding to next cell. 
 This takes takes as input a ``source_directory`` which will be copied to the Azure VM and should contain your training script, a ``script`` which is the file name of your script in that source_directory which will be run automatically by Azure when the VM setup has completed, a ``compute_target`` which indicates which compute the script should be deployed to, and the ``environment`` which we defined earlier indicating what all needs to be installed on the VM as pre-requisites.
