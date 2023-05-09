@@ -518,7 +518,7 @@ On the experiment page, click ```Outputs + logs```：
 
 <img src="./images/check_log_and_download_ouput_step1.png" style="height: 90%; width: 90%;"/>
 
-Then from on the left-hand panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```70_driver_log.txt```. THat log file contains the system output from the job you submitted, and in particular all print statements from the training script are going to be found there. Scroll through this log until near the end, and make sure that you see ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicate that the training and inference are complete respectively.Double check on the left hand side panel again, unfold the ```outputs``` > ```runs``` directory, and make sure that both ```detect``` and ```train``` folders are there.  
+Then from on the left-hand panel you can get a preview of the logs and output files. Navigate to ```azureml-logs``` > ```user_logs/std_log.txt```. THat log file contains the system output from the job you submitted, and in particular all print statements from the training script are going to be found there. Scroll through this log until near the end, and make sure that you see ```100 epochs completed in ...``` and ```Results saved to runs/detect/exp```, which indicate that the training and inference are complete respectively.Double check on the left hand side panel again, unfold the ```outputs``` > ```runs``` directory, and make sure that both ```detect``` and ```train``` folders are there.  
 
 <img src="./images/check_log_and_download_ouput_step2.png" style="height: 90%; width: 90%;"/>
 
