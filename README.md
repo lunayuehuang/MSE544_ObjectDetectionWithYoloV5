@@ -227,6 +227,8 @@ In the following page, choose the default datastore (typically called "Azure Blo
 
 <img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
 
+If default datastore does not work, you can create a new one referring to [troubleshooting link](https://github.com/lunayuehuang/MSE544_ObjectDetectionWithYoloV5/blob/main/troubleshooting.md).
+
 Then click the ```Browse``` button in the ```Select files for your dataset``` section, and choose ```Browse files```:
 
 <img src="./images/create_dataset_step4.png" style="height: 75%; width: 75%;"/>
