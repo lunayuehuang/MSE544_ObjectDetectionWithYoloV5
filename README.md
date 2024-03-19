@@ -115,7 +115,7 @@ The output of this cell will show the size of training, validation and testing s
 
 Next, we will organize our data directory hierarchy as:
 ```
-|---image_data
+|---molecule_images
     |---training.yaml
     |---train
         |---images
