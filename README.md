@@ -203,7 +203,7 @@ In order to train yolov5 on Azure GPU training clusters, you need to also create
 First of all, go to Azure Machine Learning portal (https://ml.azure.com) and sign in with your UW account. 
 At the left panel of the window, select "Workspace", and select your own workspace named ```azureml-<uwid>```.
 
-<img src="./images/aml_set_workspace.png" style="height: 90%; width: 40%;"/>
+<img src="./images/aml_set_workspace.png" style="height: 90%; width: 90%;"/>
 
 ### Step A. Create a DataSet of molecular images  <a name="part2_stepa"></a>
 
