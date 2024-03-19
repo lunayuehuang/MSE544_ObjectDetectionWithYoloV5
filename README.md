@@ -212,7 +212,7 @@ Open your terminal and navigate to the folder you created (```MSE544_yolo_traini
 tar -cvf molecule_images.tar ./molecule_images
 ```
 
-Navigate back to your Home page of your Azure Machine Learning studio instance, choose ```Datasets``` from left side bar and then click ```+ Create``` on the right hand window. Choose ```From local files``` in the list.
+Navigate back to your Home page of your Azure Machine Learning studio instance, choose ```Datasets``` from left side bar and then click ```+ Create``` on the right hand window. 
 
 <img src="./images/create_dataset_step1.png" style="height: 90%; width: 90%;"/>
 
