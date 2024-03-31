@@ -252,7 +252,7 @@ Navigate back to the home page of your Azure Machine Learning studio instance, a
 
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
 
-At the prompt, choose options: Location = ```"Central US"```, VM priority = ```Dedicated VM```, VM type = ```GPU``` and VM Size = ```Standard_NC6s_v3```,  then click ```Next```. 
+At the prompt, choose options: Location = ```"South Central US"```, VM priority = ```Dedicated VM```, VM type = ```GPU``` and VM Size = ```Standard_NC6s_v3```,  then click ```Next```. 
 
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
