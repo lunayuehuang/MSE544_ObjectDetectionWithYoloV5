@@ -371,7 +371,7 @@ Let's now copy the relevant processing steps into that script file:
     # Get the molecule dataset from the current workspace, and download it
     print("Fetching dataset")
     ws = Run.get_context().experiment.workspace
-    dataset = Dataset.get_by_name(ws, name='molecule_images_yolov5')
+    dataset = Dataset.get_by_name(ws, name='molecule_image_yolov5')
     print("Download dataset")
     dataset.download(mounted_path,overwrite=True)
     print("Check that the tar file is there:")
