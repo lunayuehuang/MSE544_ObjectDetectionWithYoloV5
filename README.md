@@ -594,6 +594,6 @@ Then, you can run the above steps expect for switching the "run train.py" comman
 
 ### Running on Azure
 
-
+Still under developments.
 
 
