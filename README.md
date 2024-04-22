@@ -568,15 +568,17 @@ The results of your inference will be located at ```./yolov5/runs/detect/exp```,
 [https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2](https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2)
 
 
-## Appendix: Yolov8
+## Appendix: Yolov8 example that might 
 
 ### Local running steps
 Create conda environment for yolo v8 with python3.9. For torch installation command, please refer to torch official website.
 ```
+# Create a python environment with python3.9 and prerequites (jupyter notebook, pytorch, azure)
 $conda create -n ultralytics python=3.9 jupyter notebook -y
-$conda activate ultralytics
-$conda install pytorch::pytorch torchvision torchaudio -c pytorch
-$pip install sklearn scikit-image azureml-core --user
+$conda activate ultralytics #activate it for further installations
+$conda install pytorch::pytorch torchvision torchaudio -c pytorch #install pytorch prerequisite -- specific command could be found in torch official website
+$pip install sklearn scikit-image azureml-core --user 
+
 # Clone the ultralytics repository
 $git clone https://github.com/ultralytics/ultralytics
  
