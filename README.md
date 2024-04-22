@@ -574,9 +574,10 @@ The results of your inference will be located at ```./yolov5/runs/detect/exp```,
 Create conda environment for yolo v8 with python3.9. For torch installation command, please refer to torch official website.
 ```
 # Create a python environment with python3.9 and prerequites (jupyter notebook, pytorch, azure)
+# For specific command of pytorch installation, users could refer to torch official website.
 $conda create -n ultralytics python=3.9 jupyter notebook -y
 $conda activate ultralytics #activate it for further installations
-$conda install pytorch::pytorch torchvision torchaudio -c pytorch #install pytorch prerequisite -- specific command could be found in torch official website
+$conda install pytorch::pytorch torchvision torchaudio -c pytorch 
 $pip install sklearn scikit-image azureml-core --user 
 
 # Clone the ultralytics repository
