@@ -568,35 +568,4 @@ The results of your inference will be located at ```./yolov5/runs/detect/exp```,
 [https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2](https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2)
 
 
-## Appendix: Yolov8 example that might 
-
-### Local running steps
-Create conda environment for yolo v8 with python3.9. For torch installation command, please refer to torch official website.
-```
-# Create a python environment with python3.9 and prerequites (jupyter notebook, pytorch, azure)
-# For specific command of pytorch installation, users could refer to torch official website.
-$conda create -n ultralytics python=3.9 jupyter notebook -y
-$conda activate ultralytics #activate it for further installations
-$conda install pytorch::pytorch torchvision torchaudio -c pytorch 
-$pip install sklearn scikit-image azureml-core --user 
-
-# Clone the ultralytics repository
-$git clone https://github.com/ultralytics/ultralytics
- 
-# Navigate to the cloned directory
-$cd ultralytics
- 
-# Install the package in editable mode for development
-$pip install -e .
-
-```
-Then, you can run the above steps expect for switching the "run train.py" command into:
-```
-!yolo detect train data=./molecule_images/molecule_detection_yolov.yaml model=yolov8n.yaml pretrained=yolov8n.pt epochs=1 imgsz=640
-```
-
-### Running on Azure
-
-Still under developments.
-
 
