@@ -115,7 +115,7 @@ The output of this cell will show the size of training, validation and testing s
 
 Next, we will organize our data directory hierarchy as:
 ```
-|---image_data
+|---molecule_images
     |---training.yaml
     |---train
         |---images
@@ -201,9 +201,9 @@ As you might notice, training yolov5 model on your local machine can be very slo
 In order to train yolov5 on Azure GPU training clusters, you need to also create an AML (Azure Machine Learning) dataset that can be accessed by the cluster during training. The first step is intended to create the molecule dataset in the AML workspace.
 
 First of all, go to Azure Machine Learning portal (https://ml.azure.com) and sign in with your UW account. 
-At the top right of the window, select the dropdown to change workspace, and set the current workspace to your own (named ```azureml-<uwid>```).
+At the left panel of the window, select "Workspace", and select your own workspace named ```azureml-<uwid>```.
 
-<img src="./images/aml_set_workspace.png" style="height: 90%; width: 40%;"/>
+<img src="./images/aml_set_workspace.png" style="height: 90%; width: 90%;"/>
 
 ### Step A. Create a DataSet of molecular images  <a name="part2_stepa"></a>
 
@@ -212,7 +212,7 @@ Open your terminal and navigate to the folder you created (```MSE544_yolo_traini
 tar -cvf molecule_images.tar ./molecule_images
 ```
 
-Navigate back to your Home page of your Azure Machine Learning studio instance, choose ```Datasets``` from left side bar and then click ```+ Create dataset``` on the right hand window. Choose ```From local files``` in the list.
+Navigate back to your Home page of your Azure Machine Learning studio instance, choose ```Datasets``` from left side bar and then click ```+ Create``` on the right hand window. 
 
 <img src="./images/create_dataset_step1.png" style="height: 90%; width: 90%;"/>
 
@@ -223,7 +223,7 @@ Fill in the basic information in the prompted window. In particular make sure to
 In the following page, choose From local files, and hit next 
 <img src="./images/create_dataset_step2_5.png" style="height: 90%; width: 90%;"/>
 
-In the following page, choose the default datastore (typically called "Azure Blob Storage") that AML automatically creates with any workspace.
+In the following page, choose the default datastore (typically called "Azure Blob Storage") that AML automatically creates with any workspace. Then select ``` workspaceblobstore```, the default datastore. You can click ```Next``` without select any datastore, it will be checked when you click "Back" later.)
 
 <img src="./images/create_dataset_step3.png" style="height: 90%; width: 90%;"/>
 
@@ -252,7 +252,7 @@ Navigate back to the home page of your Azure Machine Learning studio instance, a
 
 <img src="./images/create_GPU_cluster_step1.png" style="height: 90%; width: 90%;"/>
 
-At the prompt, choose options: Location = ```"Central US"```, VM priority = ```Dedicated VM```, VM type = ```GPU``` and VM Size = ```Standard_NC6s_v3```,  then click ```Next```. 
+At the prompt, choose options: Location = ```"South Central US"```, VM priority = ```Dedicated VM```, VM type = ```GPU``` and VM Size = ```Standard_NC6s_v3```,  then click ```Next```. 
 
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
@@ -371,7 +371,7 @@ Let's now copy the relevant processing steps into that script file:
     # Get the molecule dataset from the current workspace, and download it
     print("Fetching dataset")
     ws = Run.get_context().experiment.workspace
-    dataset = Dataset.get_by_name(ws, name='molecule_images_yolov5')
+    dataset = Dataset.get_by_name(ws, name='molecule_image_yolov5')
     print("Download dataset")
     dataset.download(mounted_path,overwrite=True)
     print("Check that the tar file is there:")
@@ -566,7 +566,6 @@ The results of your inference will be located at ```./yolov5/runs/detect/exp```,
 [https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results](https://github.com/ultralytics/yolov5/wiki/Tips-for-Best-Training-Results)
 
 [https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2](https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2)
-
 
 
 
