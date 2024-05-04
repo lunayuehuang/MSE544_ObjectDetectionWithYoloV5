@@ -50,7 +50,7 @@ Once the notebook is open, make sure that the "yolov5" environment is selected f
 In the first cell of the notebook, we'll install the requirements to complete this tutorial. Copy the following, then execute it
 ```
 %pip install -r yolov5/requirements.txt --user 
-%pip install sklearn scikit-image azureml-core --user
+%pip install scikit-learn scikit-image azureml-core --user
 ```
 
 After installing the required packages, you should restart the kernel.
