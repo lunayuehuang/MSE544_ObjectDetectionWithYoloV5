@@ -550,7 +550,7 @@ Open your terminal, navigate to folder ```MSE544_yolo_training```. Copy the best
 cp ./Run_<RunName>_OutputsAndLogs/outputs/runs/train/exp/weights/best.pt ./molecule_detection.pt
 ```
 
-To run an inference, simply use the same command you used in your script, specifying where to find the weights and images on which you want to detect molecules. Make sure you have activated your yolov5 conda environment.Depending on your setup, you may need to use command ``python3`` or ``python``.
+To run an inference, simply use the same command you used in your script, specifying where to find the weights and images on which you want to detect molecules. Make sure you have activated your yolov5 conda environment using command ```conda activate yolov5```. Depending on your setup, you may need to use command ``python3`` or ``python``.
 ```
 python ./yolov5/detect.py --weights molecule_detection.pt --iou 0.05 --save-txt --source ./molecule_images/test/images 
 ```
