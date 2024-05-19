@@ -464,7 +464,8 @@ Let's now copy the relevant processing steps into that script file:
 Now swith back to the notebook again, and set up an Azure ML experiment. 
 If you haven't, import the azureml.core classes 
 
-```# import necessary packages
+```python
+# import necessary packages
 from azureml.core import Workspace, Experiment, Environment, ScriptRunConfig
 from azureml.core.conda_dependencies import CondaDependencies
 ```
