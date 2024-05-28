@@ -575,5 +575,24 @@ The results of your inference will be located at ```./yolov5/runs/detect/exp```,
 
 [https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2](https://medium.com/analytics-vidhya/you-only-look-once-yolo-implementing-yolo-in-less-than-30-lines-of-python-code-97fb9835bfd2)
 
+## Troubleshooting
+
+### Problem importing Pytorch Module
+If you have problem importing your pytorch library, though you have pytorch installed on your local computer, please try the below possible solutions:
+
+**Solution 1**: Uninstall your torch and reinstall the 1.5.1 version that fits your hardware. 
+
+For installation commands of previous version of torch please refer to: [https://pytorch.org/get-started/previous-versions/].
+
+**Solution 2**: Please refer to this github answer: [https://github.com/pytorch/pytorch/commit/fdfef759a676ee7a853872e347537bc1e4b51390].
+
+**Solution 3**: Please refer to Youtube link: [https://www.youtube.com/watch?v=ca34C8ZUI0A]. This might lead to another error named "NotImplementedError: cannot instantiate 'PosixPath' on your system" and could be solved by running detect.py and redirect PosixPath to WindowsPath refering to: [https://stackoverflow.com/questions/57286486/i-cant-load-my-model-because-i-cant-put-a-posixpath].
+
+Solution 2 and 3 are repectively provided by student Arpan De and Chanyeong Jeong from Spring 2024 Class.
+
+### '_OfflineRun' object has no attribute 'experiment'
+This error message arise from trying to run training_on_aml.py locally. You just need to save this script and have it run on azure with python commands from the jupyter notebook you build in step C. 
+
+
 
 
