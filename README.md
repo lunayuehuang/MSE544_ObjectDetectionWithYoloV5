@@ -36,7 +36,7 @@ Open your terminal and make a new directory named ```MSE544_yolo_training``` (or
 git clone https://github.com/ultralytics/yolov5
 ```
 
-Create a new conda enviroment with python 3.9 or later and install the required packages for Yolo; for that, copy the below in a terminal window then hit ```enter```:
+Create a new conda enviroment with python verstion between 3.9-3.11, and install the required packages for Yolo; for that, copy the below in a terminal window then hit ```enter```:
 ``` 
 conda create -n yolov5 python=3.9 jupyter notebook
 conda activate yolov5
