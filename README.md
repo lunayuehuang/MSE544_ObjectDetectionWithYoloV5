@@ -193,7 +193,13 @@ The logs of your training is will be located at ```yolov5/runs/train/exp*```.
 
 Now you complete 1 epoch of training of your dataset. 
 
-As you might notice, training yolov5 model on your local machine can be very slow or fast, highly depend on your PC hardware; After test local run correctly, we will move this training to Azure and use GPU machines in a compute cluster on Azure Machine Learning to speed up our training. 
+As you might notice, training a YOLOv5 model on your local machine can vary significantly in speed depending on your computer's hardware configuration. After confirming that the training runs correctly on your local setup, we will transition the process to Azure, where we can leverage GPU-enabled virtual machines in a compute cluster through Azure Cloud to significantly accelerate the training process.
+
+While some advanced local CPUs may handle the initial workload and testing of the code, training deep learning models like YOLOv5 is often constrained by system memory, disk I/O, and the absence of dedicated GPUs. In many cases, these limitations can result in unacceptably long training times—or even failed runs. If your job can be successfully initiated and run for at least 5 to 10 minutes without crashing, that’s generally a good indication that the code and environment are correctly set up. Therefore, even though your local run cannot complete, you should proceed to run the full training on Azure.
+
+Utilizing cloud computing resources offers several advantages in this context. First, cloud platforms provide access to scalable and powerful GPU infrastructure, with the option to request larger memory or specialized hardware as needed. This on-demand hardware configuration makes it easier to handle a wide range of tasks and is particularly beneficial for users who do not consistently work on the same type of data science problems. Second, cloud environments support more efficient experimentation by enabling parallel runs, automated resource scaling, and seamless integration with machine learning lifecycle tools. This flexibility allows for faster iteration and improved productivity, especially when dealing with large datasets or complex models.
+
+Please proceed to Part 2 of this tutorial, where we will configure and submit your training job on Azure.
 
 
 ## Part 2 Create GPU training clusters and prepare training on Azure Machine Learning  <a name="part2"></a>
