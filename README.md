@@ -1,6 +1,6 @@
 # MSE544 Object Detection With YoloV5
 
-Author: [Hang Hu](https://github.com/hanghu) & [Luna Huang](https://github.com/lunayuehuang), updated by Luna Huang and Yueyao Fan 2023 
+Author: [Hang Hu](https://github.com/hanghu) & [Luna Huang](https://github.com/lunayuehuang), updated by Luna Huang 2025
 
 This is a tutorial prepared for University of Washington MSE 544 class. In this tutorial, students will learn how to train and run YoloV5 on local machines; how to create GPU training clusters using Azure Machine Learning; how to depoly a project to Azure and running machine learning with Azure Machine Learning; and how to inference using trained model locally. 
 
