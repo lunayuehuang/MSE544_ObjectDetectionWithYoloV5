@@ -262,7 +262,7 @@ At the prompt, choose options: Location = ```"Central US"```, VM priority = ```D
 
 <img src="./images/create_GPU_cluster_step2.png" style="height: 90%; width: 90%;"/>
 
-In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` to ```120``` seconds. The other options may remain as per defaults. This will ensure that after a couple of minutes of inactivity, the cluster will deprovision the GPU, avoiding unnecessary costs. Then click ```Create```:
+In the following page, name the GPU cluster as ```GPU-<your-uw-id>```, and set ```Idle seconds before scale down``` to ```15``` minutes. The other options may remain as per defaults. This will ensure that after a couple of minutes of inactivity, the cluster will deprovision the GPU, avoiding unnecessary costs. Then click ```Create```:
 
 <img src="./images/create_GPU_cluster_step3.png" style="height: 90%; width: 90%;"/>
 
