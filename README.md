@@ -291,7 +291,7 @@ Define the python environment that will be used on the GPU cluster:
 yolov5_env = Environment(name="yolov5_env")
 
 # Start from a base docker environments defined by Microsoft
-yolov5_env.docker.base_image  = "mcr.microsoft.com/azureml/openmpi4.1.0-cuda11.8-cudnn8-ubuntu22.04"
+yolov5_env.docker.base_image  = "docker.io/hstirrat/yolov5-env:fixed"
 
 conda_dep = CondaDependencies()
 # Indicate which version of python needs to be installed
